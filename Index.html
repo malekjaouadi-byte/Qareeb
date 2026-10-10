@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a12">
+<title>Qareeb</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --bg:#0a0a12;--surface:#13131d;--surface-2:#1a1a28;--surface-3:#22222e;
+  --border:rgba(255,255,255,.07);--border-2:rgba(255,255,255,.12);
+  --primary:#6366f1;--primary-2:#818cf8;--primary-glow:rgba(99,102,241,.35);
+  --accent:#22d3ee;--text:#f5f5fa;--text-2:#a1a1b5;--text-3:#6b6b80;
+  --radius:14px;--radius-lg:20px;--radius-xl:24px;
+}
+body{font-family:'Segoe UI','Tahoma',-apple-system,system-ui,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  padding-bottom:96px;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+.header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;background:rgba(10,10,18,.85);
+  backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border);}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:40px;height:40px;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  display:grid;place-items:center;font-size:20px;box-shadow:0 6px 18px var(--primary-glow);}
+.brand-info h1{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+.brand-info .meta{font-size:10.5px;color:var(--text-3);display:flex;align-items:center;gap:4px;margin-top:1px;}
+.lang-switcher{display:flex;gap:3px;background:var(--surface);
+  border:1px solid var(--border);border-radius:11px;padding:3px;}
+.lang-btn{background:none;border:none;color:var(--text-3);font-family:inherit;
+  font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:8px;
+  cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.lang-btn.active{background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;box-shadow:0 3px 10px var(--primary-glow);}
+
+.page{display:none}.page.active{display:block}
+.hero{padding:24px 20px 16px;text-align:center}
+.hero h2{font-size:22px;font-weight:800;letter-spacing:-.4px;line-height:1.3;margin-bottom:6px}
+.hero h2 .grad{background:linear-gradient(120deg,var(--primary-2),var(--accent));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:13px;color:var(--text-2)}
+.loc-pill{display:flex;align-items:center;gap:8px;margin:0 18px 14px;padding:9px 14px;
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);
+  border-radius:100px;font-size:12px;color:#86efac;font-weight:500;}
+.loc-pill.pending{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.22);color:#fcd34d;}
+.loc-pill.error{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);color:#fca5a5;}
+.loc-pill .loc-dot{width:7px;height:7px;border-radius:50%;background:currentColor;
+  flex-shrink:0;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+.search-section{padding:0 18px 20px;position:relative;z-index:50}
+.search-box{position:relative;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:22px;display:flex;align-items:center;padding:0 18px;
+  transition:all .25s cubic-bezier(.4,0,.2,1);}
+.search-box:focus-within{border-color:var(--primary);background:var(--surface-2);
+  box-shadow:0 0 0 4px var(--primary-glow), 0 8px 24px rgba(0,0,0,.4);}
+.search-box .s-icon{font-size:19px;opacity:.55;flex-shrink:0;padding:0 2px;}
+.search-box input{flex:1;background:none;border:none;outline:none;color:var(--text);
+  font-family:inherit;font-size:16px;padding:18px 12px;direction:inherit;}
+.search-box input::placeholder{color:var(--text-3);font-size:13.5px}
+.search-box .s-clear{font-size:16px;color:var(--text-3);cursor:pointer;padding:8px;
+  display:none;flex-shrink:0;}
+.search-box .s-clear.show{display:block}
+
+.suggestions{position:absolute;top:calc(100% - 8px);left:18px;right:18px;
+  background:var(--surface-2);border:1px solid var(--border-2);
+  border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.7);
+  max-height:60vh;overflow-y:auto;display:none;z-index:40;padding:10px;}
+.suggestions.show{display:block}
+.suggestions::-webkit-scrollbar{width:5px}
+.suggestions::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
+.sug-item{padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:background .15s;border-radius:14px;}
+.sug-item:active{background:var(--surface-3)}
+.sug-ico{width:44px;height:44px;border-radius:14px;background:var(--surface-3);
+  display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.sug-body{flex:1;min-width:0}
+.sug-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+.sug-title b{color:var(--primary-2);font-weight:700}
+.sug-sub{font-size:11.5px;color:var(--text-3)}
+.sug-arrow{font-size:14px;color:var(--primary);opacity:.5}
+.sug-empty{padding:32px 20px;text-align:center;color:var(--text-3);font-size:13.5px;line-height:1.7;}
+.sug-empty .ico{font-size:36px;display:block;margin-bottom:10px;opacity:.4}
+
+.nearby-banner{margin:0 18px 14px;padding:14px 16px;background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(245,158,11,.08));
+  border:1px solid rgba(251,191,36,.4);border-radius:var(--radius-lg);
+  display:none;align-items:center;gap:12px;position:relative;}
+.nearby-banner.show{display:flex;animation:nearby-pulse 1.5s ease}
+@keyframes nearby-pulse{0%{transform:scale(.95);opacity:0}100%{transform:scale(1);opacity:1}}
+.nearby-banner .nb-icon{font-size:26px;flex-shrink:0;animation:ring 2s infinite}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+.nearby-banner .nb-body{flex:1;min-width:0}
+.nearby-banner .nb-title{font-size:13.5px;font-weight:700;color:#fcd34d;margin-bottom:3px}
+.nearby-banner .nb-text{font-size:12px;color:#fde68a;line-height:1.5}
+.nearby-banner .nb-close{background:none;border:none;color:#fcd34d;font-size:18px;
+  cursor:pointer;padding:4px;flex-shrink:0;}
+
+.emerg-card{margin:0 18px 20px;padding:18px;background:linear-gradient(180deg, var(--surface-2), var(--surface));
+  border:1px solid var(--border);border-radius:var(--radius-xl);
+  position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.emerg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;
+  background:radial-gradient(ellipse at top right, rgba(239,68,68,.15), transparent 60%);
+  pointer-events:none;}
+.emerg-head{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;position:relative;z-index:1;}
+.emerg-title{display:flex;align-items:center;gap:8px;font-size:15px;
+  font-weight:700;color:#fca5a5;}
+.emerg-pulse{width:8px;height:8px;border-radius:50%;background:#ef4444;
+  box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:emerg-p 1.6s infinite;}
+@keyframes emerg-p{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}
+  70%{box-shadow:0 0 0 10px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.emerg-country{font-size:11.5px;color:#fca5a5;font-weight:600;
+  background:rgba(239,68,68,.15);padding:5px 12px;border-radius:100px;
+  border:1px solid rgba(239,68,68,.25);}
+.emerg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:relative;z-index:1;}
+.emerg-btn{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--border);border-radius:16px;padding:14px 6px;
+  text-decoration:none;color:var(--text);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:all .15s;cursor:pointer;}
+.emerg-btn:active{transform:scale(.95);
+  background:linear-gradient(180deg, rgba(239,68,68,.15), rgba(239,68,68,.05));
+  box-shadow:0 4px 14px rgba(239,68,68,.2);}
+.emerg-btn .ico{font-size:24px;line-height:1}
+.emerg-btn .lbl{font-size:10.5px;font-weight:600;color:var(--text-2);text-align:center}
+.emerg-btn .num{font-size:14px;color:#fca5a5;font-weight:800;letter-spacing:.3px}
+.lost-btn{margin-top:12px;width:100%;padding:16px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-family:inherit;
+  font-size:15.5px;font-weight:700;cursor:pointer;position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 10px 28px rgba(220,38,38,.4);transition:transform .15s;}
+.lost-btn:active{transform:scale(.97)}
+
+.fav-section{padding:0 18px 16px;display:none}
+.fav-section.show{display:block}
+.fav-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.fav-head span{font-size:12px;color:var(--text-3);font-weight:600;
+  display:flex;align-items:center;gap:5px;}
+.fav-head button{background:none;border:none;color:var(--text-3);
+  font-family:inherit;font-size:11.5px;cursor:pointer;padding:4px 8px;}
+.fav-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.fav-chips::-webkit-scrollbar{display:none}
+.fav-chip{flex-shrink:0;background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.05));
+  border:1px solid rgba(251,191,36,.3);
+  color:#fcd34d;padding:10px 16px;border-radius:18px;font-family:inherit;
+  font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;
+  gap:6px;white-space:nowrap;transition:all .15s;position:relative;}
+.fav-chip:active{background:rgba(251,191,36,.2);border-color:rgba(251,191,36,.6);transform:scale(.94)}
+.fav-chip .bell{font-size:11px;opacity:.8}
+.fav-chip.alert-on{background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));
+  border-color:rgba(34,197,94,.4);color:#86efac;}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:0 20px 14px;}
+.section-head h3{font-size:16.5px;font-weight:700;letter-spacing:-.2px;}
+.section-head .count{font-size:12px;color:var(--text-3);font-weight:500;}
+
+.sectors-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 18px 24px;}
+.sector-card{padding:18px;border-radius:22px;cursor:pointer;
+  background:linear-gradient(135deg, rgba(99,102,241,.06), rgba(34,211,238,.03));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;overflow:hidden;}
+.sector-card::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;
+  background:radial-gradient(circle at top right, rgba(99,102,241,.12), transparent 70%);
+  pointer-events:none;}
+.sector-card:active{transform:scale(.97);
+  background:linear-gradient(135deg, rgba(99,102,241,.15), rgba(34,211,238,.08));
+  border-color:rgba(99,102,241,.5);
+  box-shadow:0 8px 24px rgba(99,102,241,.25);}
+.sector-ico{width:50px;height:50px;border-radius:16px;
+  background:linear-gradient(135deg, rgba(99,102,241,.2), rgba(34,211,238,.1));
+  border:1px solid rgba(99,102,241,.3);
+  display:grid;place-items:center;font-size:24px;
+  position:relative;z-index:1;}
+.sector-body{position:relative;z-index:1}
+.sector-title{font-size:15px;font-weight:700;color:var(--text);
+  letter-spacing:-.2px;margin-bottom:4px;}
+.sector-count{font-size:12px;color:var(--text-3);font-weight:500;}
+
+.sector-header{padding:18px 20px 20px;display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--border);position:sticky;top:68px;z-index:50;
+  background:rgba(10,10,18,.85);backdrop-filter:blur(20px);}
+.back-btn{width:42px;height:42px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--border);color:var(--text);font-size:18px;cursor:pointer;
+  display:grid;place-items:center;flex-shrink:0;transition:all .15s;}
+.back-btn:active{transform:scale(.92);background:var(--surface-2)}
+.sector-info{flex:1;min-width:0}
+.sector-info h2{font-size:17.5px;font-weight:700;display:flex;align-items:center;
+  gap:8px;letter-spacing:-.2px;}
+.sector-info p{font-size:12px;color:var(--text-3);margin-top:3px}
+
+.activities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 18px 24px;}
+.act-card{border-radius:18px;padding:16px 8px 14px;text-align:center;cursor:pointer;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  transition:all .15s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  min-height:96px;justify-content:center;position:relative;}
+.act-card:active{transform:scale(.92);
+  background:linear-gradient(180deg, rgba(99,102,241,.2), rgba(99,102,241,.1));
+  border-color:rgba(99,102,241,.6);
+  box-shadow:0 6px 20px rgba(99,102,241,.3);}
+.act-ico{font-size:30px;line-height:1;transition:transform .2s}
+.act-card:active .act-ico{transform:scale(1.1)}
+.act-title{font-size:11.5px;font-weight:700;color:var(--text-2);line-height:1.3;letter-spacing:-.1px;}
+.act-star{position:absolute;top:4px;right:4px;background:none;border:none;
+  font-size:14px;cursor:pointer;padding:4px;opacity:.4;transition:all .2s;}
+.act-star.on{opacity:1;transform:scale(1.1);}
+.no-results{grid-column:1/-1;text-align:center;padding:56px 20px;
+  color:var(--text-3);font-size:13.5px;}
+.no-results .ico{font-size:42px;display:block;margin-bottom:12px;opacity:.35;}
+
+.sector-search{padding:14px 18px 8px;position:relative;}
+.sector-search input{width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:inherit;font-size:14.5px;padding:13px 44px 13px 16px;
+  border-radius:14px;outline:none;direction:inherit;transition:all .2s;}
+.sector-search input:focus{border-color:var(--primary);background:var(--surface-2);
+  box-shadow:0 0 0 3px var(--primary-glow);}
+.sector-search input::placeholder{color:var(--text-3)}
+.sector-search .s-ico{position:absolute;right:32px;top:50%;transform:translateY(-50%);
+  font-size:16px;pointer-events:none;opacity:.5;}
+html[dir="ltr"] .sector-search .s-ico{right:auto;left:32px}
+.sector-search .s-clr{position:absolute;left:32px;top:50%;transform:translateY(-50%);
+  font-size:15px;cursor:pointer;display:none;opacity:.5;padding:4px;}
+html[dir="ltr"] .sector-search .s-clr{left:auto;right:32px}
+.sector-search .s-clr.show{display:block}
+
+/* ===== صفحة الأماكن الجديدة ===== */
+.places-header{padding:18px 20px;display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--border);position:sticky;top:68px;z-index:50;
+  background:rgba(10,10,18,.85);backdrop-filter:blur(20px);}
+.places-header .back-btn{width:42px;height:42px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--border);color:var(--text);font-size:18px;cursor:pointer;
+  display:grid;place-items:center;flex-shrink:0;transition:all .15s;}
+.places-header .back-btn:active{transform:scale(.92);background:var(--surface-2)}
+.places-h-info{flex:1;min-width:0}
+.places-h-info h2{font-size:17px;font-weight:700;display:flex;align-items:center;
+  gap:8px;letter-spacing:-.2px;}
+.places-h-info p{font-size:11.5px;color:var(--text-3);margin-top:3px}
+.places-map-btn{padding:10px 14px;border:1px solid var(--border-2);
+  background:var(--surface);color:var(--text);border-radius:12px;
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:all .15s;flex-shrink:0;}
+.places-map-btn:active{transform:scale(.95);background:var(--surface-2)}
+
+.places-list{padding:16px 18px 24px;display:flex;flex-direction:column;gap:12px;}
+
+.place-card{background:linear-gradient(180deg, var(--surface-2), var(--surface));
+  border:1px solid var(--border);border-radius:18px;padding:14px;
+  display:flex;gap:12px;cursor:pointer;
+  transition:all .2s cubic-bezier(.4,0,.2,1);position:relative;}
+.place-card:active{transform:scale(.98);
+  border-color:var(--primary-2);
+  box-shadow:0 6px 20px rgba(99,102,241,.2);}
+.place-img{width:80px;height:80px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg, rgba(99,102,241,.15), rgba(34,211,238,.08));
+  border:1px solid var(--border);
+  display:grid;place-items:center;font-size:32px;
+  overflow:hidden;position:relative;}
+.place-img img{width:100%;height:100%;object-fit:cover;}
+.place-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.place-name{font-size:15px;font-weight:700;color:var(--text);
+  letter-spacing:-.2px;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.place-distance{font-size:11.5px;color:var(--primary-2);font-weight:600;
+  display:flex;align-items:center;gap:4px;}
+.place-address{font-size:12px;color:var(--text-3);line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+.place-meta{display:flex;align-items:center;gap:10px;margin-top:2px;flex-wrap:wrap;}
+.place-status{font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;}
+.place-status.open{color:#22c55e}
+.place-status.closed{color:#ef4444}
+.place-status .sdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.place-rating{font-size:11.5px;color:#fbbf24;font-weight:600;}
+
+.place-actions{display:flex;gap:6px;margin-top:8px;}
+.place-actions button{flex:1;padding:9px 8px;border:none;border-radius:10px;
+  font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:transform .15s;background:var(--surface-3);color:var(--text-2);
+  border:1px solid var(--border);}
+.place-actions button:active{transform:scale(.95)}
+.place-actions .btn-dir{background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;border-color:transparent;}
+.place-actions .btn-call{background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;border-color:transparent;}
+
+.places-loading{padding:60px 20px;text-align:center;color:var(--text-3);}
+.spinner-lg{width:44px;height:44px;border:3px solid var(--border-2);
+  border-top-color:var(--primary);border-radius:50%;
+  animation:spin 1s linear infinite;margin:0 auto 18px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.places-empty{padding:60px 20px;text-align:center;color:var(--text-3);
+  font-size:14px;line-height:1.8;}
+.places-empty .ico{font-size:52px;display:block;margin-bottom:16px;opacity:.35;}
+.places-empty button{margin-top:20px;padding:12px 24px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;
+  font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+
+.recent{padding:0 18px 16px;display:none}
+.recent.show{display:block}
+.recent-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.recent-head span{font-size:12px;color:var(--text-3);font-weight:500}
+.recent-head button{background:none;border:none;color:var(--text-3);
+  font-family:inherit;font-size:11.5px;cursor:pointer;padding:4px 8px;}
+.recent-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.recent-chips::-webkit-scrollbar{display:none}
+.recent-chip{flex-shrink:0;background:var(--surface);border:1px solid var(--border);
+  color:var(--text-2);padding:10px 16px;border-radius:18px;font-family:inherit;
+  font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;
+  gap:5px;white-space:nowrap;transition:all .15s;}
+.recent-chip:active{background:var(--surface-2);border-color:var(--primary);transform:scale(.94)}
+
+.form-wrap{padding:20px 18px 32px}
+.form-hero{text-align:center;padding:24px 20px;margin-bottom:20px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);}
+.form-hero h2{font-size:19px;font-weight:700;margin-bottom:6px}
+.form-hero p{font-size:12.5px;color:var(--text-2)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12.5px;color:var(--text-2);
+  margin-bottom:7px;font-weight:600;}
+.form-group input,.form-group select{width:100%;background:var(--surface);
+  border:1px solid var(--border);color:var(--text);font-family:inherit;
+  font-size:14.5px;padding:14px 16px;border-radius:14px;outline:none;
+  -webkit-appearance:none;appearance:none;direction:inherit;transition:all .2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--primary);
+  background:var(--surface-2);box-shadow:0 0 0 3px var(--primary-glow);}
+.form-group select{cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b80' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left 16px center;padding-left:42px;}
+html[dir="ltr"] .form-group select{background-position:right 16px center;
+  padding-left:16px;padding-right:42px;}
+.form-group select option{background:var(--surface-2);color:var(--text)}
+.submit-btn{width:100%;padding:17px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;
+  font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 8px 24px var(--primary-glow);margin-top:8px;transition:transform .15s;}
+.submit-btn:active{transform:scale(.97)}
+.success-box{display:none;padding:24px 20px;border-radius:var(--radius-lg);
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);
+  text-align:center;margin-top:16px;}
+.success-box.show{display:block}
+.success-box .check{font-size:46px;margin-bottom:12px}
+.success-box h3{font-size:17px;margin-bottom:10px;color:#22c55e;font-weight:700}
+.success-box p{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px}
+.success-box a{display:inline-block;padding:13px 22px;
+  background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;text-decoration:none;
+  border-radius:12px;font-weight:700;font-size:13.5px;}
+.info-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;margin-top:14px;}
+.info-card h4{font-size:13.5px;margin-bottom:10px;color:var(--primary-2);font-weight:700}
+.info-card p{font-size:12.5px;color:var(--text-2);line-height:1.9}
+.info-card b{color:var(--text)}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:60;
+  background:rgba(10,10,18,.92);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;padding:10px 8px max(16px,env(safe-area-inset-bottom));}
+.nav-btn{flex:1;background:none;border:none;color:var(--text-3);
+  font-family:inherit;font-size:10.5px;font-weight:600;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 4px;border-radius:12px;transition:color .2s;}
+.nav-btn.active{color:var(--primary-2)}
+.nav-btn .ico{font-size:22px;line-height:1;transition:transform .2s}
+.nav-btn.active .ico{transform:scale(1.15) translateY(-2px)}
+
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(120px);
+  background:var(--surface-2);border:1px solid var(--border-2);color:var(--text);
+  padding:14px 24px;border-radius:16px;font-size:13.5px;font-weight:600;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:200;
+  backdrop-filter:blur(10px);white-space:nowrap;max-width:90vw;
+  box-shadow:0 12px 32px rgba(0,0,0,.5);}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.footer{text-align:center;padding:20px 18px 8px;font-size:11px;color:var(--text-3)}
+
+.country-picker{position:fixed;inset:0;background:rgba(10,10,18,.96);
+  z-index:300;display:none;padding:32px 20px;overflow-y:auto;backdrop-filter:blur(20px);}
+.country-picker.show{display:block}
+.country-picker h2{font-size:20px;margin-bottom:8px;text-align:center;
+  color:var(--primary-2);font-weight:700;}
+.country-picker p{text-align:center;color:var(--text-3);font-size:13px;
+  margin-bottom:24px;line-height:1.7;}
+.country-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  max-width:520px;margin:0 auto;}
+.country-item{background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:14px 12px;cursor:pointer;transition:all .2s;text-align:center;}
+.country-item:active{background:var(--surface-2);border-color:var(--primary)}
+.country-item .flag{font-size:26px;display:block;margin-bottom:6px}
+.country-item .name{font-size:12.5px;font-weight:600;color:var(--text)}
+.country-item .code{font-size:10.5px;color:var(--text-3);margin-top:2px}
+
+.lost-overlay{position:fixed;inset:0;background:rgba(3,3,8,.88);
+  backdrop-filter:blur(12px);z-index:400;display:none;place-items:center;padding:22px;}
+.lost-overlay.show{display:grid}
+.lost-modal{background:var(--surface-2);border:1px solid rgba(239,68,68,.35);
+  border-radius:var(--radius-xl);padding:26px 22px 22px;max-width:420px;width:100%;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);text-align:center;
+  animation:modal-in .3s cubic-bezier(.4,0,.2,1);}
+@keyframes modal-in{from{transform:translateY(24px) scale(.96);opacity:0}
+  to{transform:translateY(0) scale(1);opacity:1}}
+.lost-modal .warn{width:68px;height:68px;border-radius:50%;
+  background:rgba(239,68,68,.12);border:2px solid rgba(239,68,68,.35);
+  display:grid;place-items:center;font-size:32px;margin:0 auto 16px;}
+.lost-modal h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.lost-modal .sub{font-size:12.5px;color:var(--text-2);line-height:1.7;margin-bottom:18px;}
+.lost-preview{background:var(--bg);border:1px solid var(--border);
+  border-radius:14px;padding:14px;text-align:inherit;margin-bottom:18px;}
+.lost-preview .lbl{font-size:10.5px;color:var(--text-3);margin-bottom:8px;
+  font-weight:600;letter-spacing:.4px;}
+.lost-preview .txt{font-size:12.5px;color:var(--text);line-height:1.8;word-break:break-all;}
+.lost-preview .txt .lnk{color:var(--accent);text-decoration:underline;font-size:11.5px;}
+.lost-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.lost-btns button{padding:14px 12px;border:none;border-radius:12px;
+  font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+  transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.lost-btns .cancel{background:var(--surface-3);border:1px solid var(--border-2);color:var(--text);}
+.lost-btns .cancel:active{transform:scale(.96)}
+.lost-btns .confirm{background:linear-gradient(135deg,#dc2626,#991b1b);
+  color:#fff;box-shadow:0 8px 22px rgba(220,38,38,.4);}
+.lost-btns .confirm:active{transform:scale(.96)}
+
+.views-overlay{position:fixed;inset:0;background:rgba(3,3,8,.85);
+  backdrop-filter:blur(10px);z-index:350;display:none;place-items:end center;padding:0;}
+.views-overlay.show{display:grid;animation:fade-in .2s}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+.views-sheet{background:var(--surface-2);border-top:1px solid var(--border-2);
+  border-radius:28px 28px 0 0;padding:26px 22px max(28px,env(safe-area-inset-bottom));
+  width:100%;max-width:520px;animation:slide-up .3s cubic-bezier(.4,0,.2,1);}
+@keyframes slide-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.views-header{text-align:center;margin-bottom:18px;position:relative;}
+.views-header .drag{width:40px;height:4px;border-radius:2px;background:var(--border-2);
+  margin:0 auto 14px;}
+.views-title{font-size:18px;font-weight:700;margin-bottom:4px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.views-sub{font-size:13px;color:var(--text-3)}
+.views-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.view-btn{border-radius:18px;padding:18px 14px;cursor:pointer;
+  background:linear-gradient(180deg, var(--surface-2), var(--surface));
+  border:1.5px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:all .2s cubic-bezier(.4,0,.2,1);color:var(--text);}
+.view-btn:active{transform:scale(.94);
+  background:linear-gradient(180deg, rgba(99,102,241,.18), rgba(99,102,241,.08));
+  border-color:var(--primary-2);
+  box-shadow:0 8px 24px rgba(99,102,241,.3);}
+.view-btn .vb-ico{font-size:30px;line-height:1;transition:transform .2s}
+.view-btn:active .vb-ico{transform:scale(1.15)}
+.view-btn .vb-lbl{font-size:12.5px;font-weight:700;color:var(--text)}
+.view-btn .vb-desc{font-size:10.5px;color:var(--text-3);text-align:center;line-height:1.3}
+.view-btn.star-btn{border-color:rgba(251,191,36,.3)}
+.view-btn.star-btn.on{background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,191,36,.05));
+  border-color:rgba(251,191,36,.5)}
+.view-btn.star-btn.on .vb-lbl{color:#fcd34d}
+
+.ai-fab{position:fixed;bottom:106px;left:20px;z-index:70;
+  width:58px;height:58px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4,#22d3ee);
+  background-size:200% 200%;
+  animation:fab-gradient 4s ease infinite;
+  color:#fff;font-size:28px;cursor:pointer;
+  display:grid;place-items:center;
+  box-shadow:0 10px 30px rgba(139,92,246,.5),0 0 0 4px rgba(139,92,246,.15);
+  transition:transform .2s cubic-bezier(.4,0,.2,1);}
+@keyframes fab-gradient{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.ai-fab:active{transform:scale(.9)}
+.ai-fab::after{content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:2px solid rgba(139,92,246,.4);
+  animation:ai-pulse 2s infinite;pointer-events:none;}
+@keyframes ai-pulse{0%{transform:scale(1);opacity:.6}
+  100%{transform:scale(1.35);opacity:0}}
+
+.ai-chat{position:fixed;inset:0;background:rgba(5,5,12,.95);
+  backdrop-filter:blur(16px);z-index:500;display:none;flex-direction:column;}
+.ai-chat.show{display:flex;animation:chat-in .3s cubic-bezier(.4,0,.2,1);}
+@keyframes chat-in{from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}}
+.ai-header{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:rgba(10,10,18,.7);
+  backdrop-filter:blur(20px);flex-shrink:0;}
+.ai-header-left{display:flex;align-items:center;gap:12px}
+.ai-avatar{width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  display:grid;place-items:center;font-size:20px;
+  box-shadow:0 4px 14px rgba(139,92,246,.4);}
+.ai-header-info h3{font-size:15.5px;font-weight:700;margin-bottom:2px}
+.ai-header-info p{font-size:11.5px;color:var(--text-3);
+  display:flex;align-items:center;gap:5px;}
+.ai-header-info p::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:#22c55e;box-shadow:0 0 6px #22c55e;display:inline-block;}
+.ai-close{width:38px;height:38px;border-radius:12px;background:var(--surface);
+  border:1px solid var(--border);color:var(--text-2);font-size:16px;
+  cursor:pointer;display:grid;place-items:center;transition:all .15s;}
+.ai-close:active{background:var(--surface-2);transform:scale(.94)}
+
+.ai-messages{flex:1;overflow-y:auto;padding:20px 18px;
+  display:flex;flex-direction:column;gap:14px;
+  scrollbar-width:thin;scrollbar-color:var(--border-2) transparent;}
+.ai-messages::-webkit-scrollbar{width:5px}
+.ai-messages::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
+
+.ai-msg{display:flex;gap:10px;max-width:100%;animation:msg-in .3s ease;}
+@keyframes msg-in{from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:15px;}
+.ai-msg.user .ai-msg-avatar{background:linear-gradient(135deg,var(--primary),var(--primary-2));}
+.ai-msg.ai .ai-msg-avatar{background:linear-gradient(135deg,#8b5cf6,#06b6d4);}
+.ai-bubble{max-width:80%;padding:12px 16px;border-radius:18px;
+  font-size:14px;line-height:1.6;word-wrap:break-word;white-space:pre-wrap;}
+.ai-msg.user .ai-bubble{background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;border-bottom-right-radius:6px;}
+.ai-msg.ai .ai-bubble{background:var(--surface-2);color:var(--text);
+  border:1px solid var(--border);border-bottom-left-radius:6px;}
+
+.ai-map-btn{margin-top:10px;padding:10px 16px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;
+  font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(34,197,94,.35);
+  transition:transform .15s;}
+.ai-map-btn:active{transform:scale(.95)}
+
+.ai-typing{display:flex;gap:10px;max-width:100%}
+.ai-typing .ai-msg-avatar{background:linear-gradient(135deg,#8b5cf6,#06b6d4);}
+.ai-typing .bubble{background:var(--surface-2);border:1px solid var(--border);
+  padding:16px 20px;border-radius:18px;border-bottom-left-radius:6px;
+  display:flex;gap:5px;align-items:center;}
+.ai-typing .dot{width:7px;height:7px;border-radius:50%;background:var(--text-3);
+  animation:typing 1.4s infinite;}
+.ai-typing .dot:nth-child(2){animation-delay:.2s}
+.ai-typing .dot:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}
+  30%{opacity:1;transform:translateY(-4px)}}
+
+.ai-suggestions{display:flex;gap:8px;overflow-x:auto;padding:12px 18px 4px;
+  scrollbar-width:none;flex-shrink:0;border-top:1px solid var(--border);
+  background:rgba(10,10,18,.5);}
+.ai-suggestions::-webkit-scrollbar{display:none}
+.ai-sug-chip{flex-shrink:0;background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text-2);padding:8px 14px;border-radius:100px;
+  font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;
+  white-space:nowrap;transition:all .15s;}
+.ai-sug-chip:active{background:var(--surface-3);border-color:var(--primary);color:var(--text)}
+
+.ai-input-wrap{padding:10px 18px max(18px,env(safe-area-inset-bottom));
+  display:flex;gap:10px;align-items:flex-end;background:rgba(10,10,18,.8);
+  backdrop-filter:blur(20px);flex-shrink:0;}
+.ai-input{flex:1;background:var(--surface);border:1.5px solid var(--border);
+  color:var(--text);font-family:inherit;font-size:14.5px;
+  padding:13px 16px;border-radius:22px;outline:none;
+  resize:none;max-height:120px;min-height:46px;line-height:1.4;
+  direction:inherit;transition:border-color .2s;}
+.ai-input:focus{border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-glow);}
+.ai-input::placeholder{color:var(--text-3);font-size:13.5px}
+.ai-send{width:46px;height:46px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;font-size:20px;
+  cursor:pointer;display:grid;place-items:center;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(139,92,246,.4);transition:transform .15s;}
+.ai-send:active{transform:scale(.9)}
+.ai-send:disabled{opacity:.4;cursor:not-allowed}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-logo">📍</div>
+    <div class="brand-info">
+      <h1 id="appName">Qareeb</h1>
+      <div class="meta" id="countryDisplay">🌍 ...</div>
+    </div>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="ar">ع</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</header>
+
+<div class="page active" id="page-home">
+  <div class="hero"><h2 id="heroTitle"></h2><p id="heroSubtitle"></p></div>
+  <div class="loc-pill pending" id="locPill"><span class="loc-dot"></span><span id="locText"></span></div>
+  <div class="nearby-banner" id="nearbyBanner">
+    <div class="nb-icon">🔔</div>
+    <div class="nb-body"><div class="nb-title" id="nbTitle"></div><div class="nb-text" id="nbText"></div></div>
+    <button class="nb-close" onclick="closeNearby()">✕</button>
+  </div>
+  <div class="search-section">
+    <div class="search-box">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="mainSearch" autocomplete="off">
+      <span class="s-clear" id="mainSearchClear">✖</span>
+    </div>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+  <div class="fav-section" id="favSection">
+    <div class="fav-head"><span>⭐ <span id="favTitle"></span></span><button onclick="clearFavs()" id="favClear"></button></div>
+    <div class="fav-chips" id="favChips"></div>
+  </div>
+  <div class="emerg-card">
+    <div class="emerg-head">
+      <div class="emerg-title"><span class="emerg-pulse"></span><span id="emergTitle"></span></div>
+      <span class="emerg-country" id="emergCountry">🌍</span>
+    </div>
+    <div class="emerg-grid" id="emergGrid"></div>
+    <button class="lost-btn" onclick="imLost()"><span>🆘</span><span id="lostText"></span></button>
+  </div>
+  <div class="recent" id="recentSection">
+    <div class="recent-head"><span id="recentTitle"></span><button onclick="clearRecents()" id="recentClear"></button></div>
+    <div class="recent-chips" id="recentChips"></div>
+  </div>
+  <div class="section-head"><h3 id="sectorsTitle"></h3><span class="count" id="sectorsCount"></span></div>
+  <div class="sectors-grid" id="sectorsGrid"></div>
+  <div class="footer" id="footer"></div>
+</div>
+
+<div class="page" id="page-sector">
+  <div class="sector-header">
+    <button class="back-btn" onclick="backToHome()">→</button>
+    <div class="sector-info">
+      <h2><span id="sectorIcon"></span> <span id="sectorName"></span></h2>
+      <p id="sectorSubtitle"></p>
+    </div>
+  </div>
+  <div class="sector-search">
+    <input type="text" id="sectorSearch">
+    <span class="s-ico">🔍</span>
+    <span class="s-clr" id="sectorClear" onclick="clearSectorSearch()">✖</span>
+  </div>
+  <div class="activities-grid" id="sectorGrid"></div>
+</div>
+
+<div class="page" id="page-places">
+  <div class="places-header">
+    <button class="back-btn" onclick="backToSector()">→</button>
+    <div class="places-h-info">
+      <h2><span id="placesIcon">📍</span> <span id="placesTitle"></span></h2>
+      <p id="placesSub"></p>
+    </div>
+    <button class="places-map-btn" onclick="openAllOnMap()">🗺️ <span id="placesMapBtn">الخريطة</span></button>
+  </div>
+  <div class="places-list" id="placesList"></div>
+</div>
+
+<div class="page" id="page-owner">
+  <div class="form-wrap">
+    <div class="form-hero"><h2 id="registerTitle"></h2><p id="registerSubtitle"></p></div>
+    <div class="form-group"><label id="bizNameLabel"></label><input type="text" id="bizName" autocomplete="off"></div>
+    <div class="form-group"><label id="bizTypeLabel"></label><select id="bizType"><option value="">--</option></select></div>
+    <div class="form-group"><label id="bizAddressLabel"></label><input type="text" id="bizAddress" autocomplete="off"></div>
+    <div class="form-group"><label id="bizPhoneLabel"></label><input type="tel" id="bizPhone" autocomplete="off"></div>
+    <button class="submit-btn" onclick="submitBusiness()" id="submitBtn"></button>
+    <div class="success-box" id="successBox">
+      <div class="check">✅</div>
+      <h3 id="successTitle"></h3>
+      <p id="successText"></p>
+      <a href="https://www.google.com/business/" target="_blank" rel="noopener" id="openGoogleLink"></a>
+    </div>
+    <div class="info-card"><h4 id="easierWayTitle"></h4><p id="easierWayText"></p></div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('home', this)"><span class="ico">🏠</span><span id="navHome"></span></button>
+  <button class="nav-btn" onclick="focusSearch()"><span class="ico">🔍</span><span id="navSearch"></span></button>
+  <button class="nav-btn" onclick="switchTab('owner', this)"><span class="ico">🏪</span><span id="navAdd"></span></button>
+</nav>
+
+<button class="ai-fab" id="aiFab" onclick="openAIChat()">🤖</button>
+
+<div class="ai-chat" id="aiChat">
+  <div class="ai-header">
+    <div class="ai-header-left">
+      <div class="ai-avatar">🤖</div>
+      <div class="ai-header-info"><h3 id="aiTitle">مساعد قريب الذكي</h3><p id="aiStatus">متصل</p></div>
+    </div>
+    <button class="ai-close" onclick="closeAIChat()">✕</button>
+  </div>
+  <div class="ai-messages" id="aiMessages"></div>
+  <div class="ai-suggestions" id="aiSuggestions"></div>
+  <div class="ai-input-wrap">
+    <textarea class="ai-input" id="aiInput" rows="1" placeholder="اكتب سؤالك..."></textarea>
+    <button class="ai-send" id="aiSend" onclick="sendAIMessage()">➤</button>
+  </div>
+</div>
+
+<div class="country-picker" id="countryPicker">
+  <h2 id="pickerTitle"></h2><p id="pickerText"></p><div class="country-grid" id="countryGrid"></div>
+</div>
+
+<div class="lost-overlay" id="lostOverlay">
+  <div class="lost-modal">
+    <div class="warn">🆘</div>
+    <h3 id="lostModalTitle"></h3>
+    <p class="sub" id="lostModalSubtitle"></p>
+    <div class="lost-preview">
+      <div class="lbl">📝 <span id="lostPreviewLabel"></span></div>
+      <div class="txt" id="lostPreviewText"></div>
+    </div>
+    <div class="lost-btns">
+      <button class="cancel" onclick="closeLostModal()"><span>✖</span><span id="lostCancelText"></span></button>
+      <button class="confirm" onclick="confirmLost()"><span>✅</span><span id="lostConfirmText"></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="views-overlay" id="viewsOverlay" onclick="if(event.target===this)closeViewsSheet()">
+  <div class="views-sheet">
+    <div class="views-header">
+      <div class="drag"></div>
+      <div class="views-title"><span id="viewsIcon">📍</span><span id="viewsTitle">المكان</span></div>
+      <div class="views-sub" id="viewsSub"></div>
+    </div>
+    <div class="views-grid" id="viewsGrid"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GROQ_API_KEY = '';
+const GROQ_MODEL = 'openai/gpt-oss-20b';
+const GEOAPIFY_KEY = '29a287ca47b346eaa7f8b01849da2a6b';
+
+/* ============ EMERGENCY DB ============ */
+const EMERGENCY_DB = {
+  'TN':{name:{ar:'تونس',fr:'Tunisie',en:'Tunisia'},flag:'🇹🇳',amb:'190',pol:'197',fire:'198'},
+  'DZ':{name:{ar:'الجزائر',fr:'Algérie',en:'Algeria'},flag:'🇩🇿',amb:'14',pol:'17',fire:'14'},
+  'MA':{name:{ar:'المغرب',fr:'Maroc',en:'Morocco'},flag:'🇲🇦',amb:'15',pol:'19',fire:'15'},
+  'EG':{name:{ar:'مصر',fr:'Égypte',en:'Egypt'},flag:'🇪🇬',amb:'123',pol:'122',fire:'180'},
+  'SA':{name:{ar:'السعودية',fr:'Arabie S.',en:'Saudi Arabia'},flag:'🇸🇦',amb:'997',pol:'999',fire:'998'},
+  'AE':{name:{ar:'الإمارات',fr:'É.A.U',en:'UAE'},flag:'🇦🇪',amb:'998',pol:'999',fire:'997'},
+  'QA':{name:{ar:'قطر',fr:'Qatar',en:'Qatar'},flag:'🇶🇦',amb:'999',pol:'999',fire:'999'},
+  'KW':{name:{ar:'الكويت',fr:'Koweït',en:'Kuwait'},flag:'🇰🇼',amb:'112',pol:'112',fire:'112'},
+  'BH':{name:{ar:'البحرين',fr:'Bahreïn',en:'Bahrain'},flag:'🇧🇭',amb:'999',pol:'999',fire:'999'},
+  'OM':{name:{ar:'عمان',fr:'Oman',en:'Oman'},flag:'🇴🇲',amb:'9999',pol:'9999',fire:'9999'},
+  'JO':{name:{ar:'الأردن',fr:'Jordanie',en:'Jordan'},flag:'🇯🇴',amb:'911',pol:'911',fire:'911'},
+  'LB':{name:{ar:'لبنان',fr:'Liban',en:'Lebanon'},flag:'🇱🇧',amb:'140',pol:'112',fire:'175'},
+  'SY':{name:{ar:'سوريا',fr:'Syrie',en:'Syria'},flag:'🇸🇾',amb:'110',pol:'112',fire:'113'},
+  'IQ':{name:{ar:'العراق',fr:'Irak',en:'Iraq'},flag:'🇮🇶',amb:'122',pol:'104',fire:'115'},
+  'PS':{name:{ar:'فلسطين',fr:'Palestine',en:'Palestine'},flag:'🇵🇸',amb:'101',pol:'100',fire:'102'},
+  'YE':{name:{ar:'اليمن',fr:'Yémen',en:'Yemen'},flag:'🇾🇪',amb:'191',pol:'194',fire:'191'},
+  'LY':{name:{ar:'ليبيا',fr:'Libye',en:'Libya'},flag:'🇱🇾',amb:'193',pol:'151',fire:'191'},
+  'SD':{name:{ar:'السودان',fr:'Soudan',en:'Sudan'},flag:'🇸🇩',amb:'333',pol:'999',fire:'999'},
+  'US':{name:{ar:'الولايات المتحدة',fr:'États-Unis',en:'United States'},flag:'🇺🇸',amb:'911',pol:'911',fire:'911'},
+  'CA':{name:{ar:'كندا',fr:'Canada',en:'Canada'},flag:'🇨🇦',amb:'911',pol:'911',fire:'911'},
+  'MX':{name:{ar:'المكسيك',fr:'Mexique',en:'Mexico'},flag:'🇲🇽',amb:'911',pol:'911',fire:'911'},
+  'BR':{name:{ar:'البرازيل',fr:'Brésil',en:'Brazil'},flag:'🇧🇷',amb:'192',pol:'190',fire:'193'},
+  'GB':{name:{ar:'بريطانيا',fr:'Royaume-Uni',en:'United Kingdom'},flag:'🇬🇧',amb:'999',pol:'999',fire:'999'},
+  'FR':{name:{ar:'فرنسا',fr:'France',en:'France'},flag:'🇫🇷',amb:'15',pol:'17',fire:'18'},
+  'DE':{name:{ar:'ألمانيا',fr:'Allemagne',en:'Germany'},flag:'🇩🇪',amb:'112',pol:'110',fire:'112'},
+  'IT':{name:{ar:'إيطاليا',fr:'Italie',en:'Italy'},flag:'🇮🇹',amb:'118',pol:'113',fire:'115'},
+  'ES':{name:{ar:'إسبانيا',fr:'Espagne',en:'Spain'},flag:'🇪🇸',amb:'112',pol:'112',fire:'112'},
+  'PT':{name:{ar:'البرتغال',fr:'Portugal',en:'Portugal'},flag:'🇵🇹',amb:'112',pol:'112',fire:'112'},
+  'NL':{name:{ar:'هولندا',fr:'Pays-Bas',en:'Netherlands'},flag:'🇳🇱',amb:'112',pol:'112',fire:'112'},
+  'BE':{name:{ar:'بلجيكا',fr:'Belgique',en:'Belgium'},flag:'🇧🇪',amb:'112',pol:'101',fire:'100'},
+  'CH':{name:{ar:'سويسرا',fr:'Suisse',en:'Switzerland'},flag:'🇨🇭',amb:'144',pol:'117',fire:'118'},
+  'AT':{name:{ar:'النمسا',fr:'Autriche',en:'Austria'},flag:'🇦🇹',amb:'144',pol:'133',fire:'122'},
+  'SE':{name:{ar:'السويد',fr:'Suède',en:'Sweden'},flag:'🇸🇪',amb:'112',pol:'112',fire:'112'},
+  'NO':{name:{ar:'النرويج',fr:'Norvège',en:'Norway'},flag:'🇳🇴',amb:'113',pol:'112',fire:'110'},
+  'DK':{name:{ar:'الدنمارك',fr:'Danemark',en:'Denmark'},flag:'🇩🇰',amb:'112',pol:'112',fire:'112'},
+  'FI':{name:{ar:'فنلندا',fr:'Finlande',en:'Finland'},flag:'🇫🇮',amb:'112',pol:'112',fire:'112'},
+  'PL':{name:{ar:'بولندا',fr:'Pologne',en:'Poland'},flag:'🇵🇱',amb:'999',pol:'997',fire:'998'},
+  'GR':{name:{ar:'اليونان',fr:'Grèce',en:'Greece'},flag:'🇬🇷',amb:'166',pol:'100',fire:'199'},
+  'TR':{name:{ar:'تركيا',fr:'Turquie',en:'Turkey'},flag:'🇹🇷',amb:'112',pol:'112',fire:'112'},
+  'RU':{name:{ar:'روسيا',fr:'Russie',en:'Russia'},flag:'🇷🇺',amb:'103',pol:'102',fire:'101'},
+  'UA':{name:{ar:'أوكرانيا',fr:'Ukraine',en:'Ukraine'},flag:'🇺🇦',amb:'103',pol:'102',fire:'101'},
+  'CN':{name:{ar:'الصين',fr:'Chine',en:'China'},flag:'🇨🇳',amb:'120',pol:'110',fire:'119'},
+  'JP':{name:{ar:'اليابان',fr:'Japon',en:'Japan'},flag:'🇯🇵',amb:'119',pol:'110',fire:'119'},
+  'KR':{name:{ar:'كوريا الجنوبية',fr:'Corée du Sud',en:'South Korea'},flag:'🇰🇷',amb:'119',pol:'112',fire:'119'},
+  'IN':{name:{ar:'الهند',fr:'Inde',en:'India'},flag:'🇮🇳',amb:'108',pol:'100',fire:'101'},
+  'PK':{name:{ar:'باكستان',fr:'Pakistan',en:'Pakistan'},flag:'🇵🇰',amb:'115',pol:'15',fire:'16'},
+  'ID':{name:{ar:'إندونيسيا',fr:'Indonésie',en:'Indonesia'},flag:'🇮🇩',amb:'118',pol:'110',fire:'113'},
+  'AU':{name:{ar:'أستراليا',fr:'Australie',en:'Australia'},flag:'🇦🇺',amb:'000',pol:'000',fire:'000'},
+  'NZ':{name:{ar:'نيوزيلندا',fr:'Nouvelle-Zélande',en:'New Zealand'},flag:'🇳🇿',amb:'111',pol:'111',fire:'111'},
+  'ZA':{name:{ar:'جنوب أفريقيا',fr:'Afrique du Sud',en:'South Africa'},flag:'🇿🇦',amb:'10177',pol:'10111',fire:'10177'},
+  'NG':{name:{ar:'نيجيريا',fr:'Nigéria',en:'Nigeria'},flag:'🇳🇬',amb:'112',pol:'112',fire:'112'},
+  'KE':{name:{ar:'كينيا',fr:'Kenya',en:'Kenya'},flag:'🇰🇪',amb:'999',pol:'999',fire:'999'},
+  'SN':{name:{ar:'السنغال',fr:'Sénégal',en:'Senegal'},flag:'🇸🇳',amb:'1515',pol:'17',fire:'18'},
+  'CI':{name:{ar:'ساحل العاج',fr:"Côte d'Ivoire",en:'Ivory Coast'},flag:'🇨🇮',amb:'185',pol:'170',fire:'180'},
+  'CM':{name:{ar:'الكاميرون',fr:'Cameroun',en:'Cameroon'},flag:'🇨🇲',amb:'119',pol:'117',fire:'118'},
+  'ML':{name:{ar:'مالي',fr:'Mali',en:'Mali'},flag:'🇲🇱',amb:'15',pol:'17',fire:'18'},
+  'MR':{name:{ar:'موريتانيا',fr:'Mauritanie',en:'Mauritania'},flag:'🇲🇷',amb:'101',pol:'117',fire:'118'}
+};
+
+/* ============ TRANSLATIONS ============ */
+const T = {
+  ar:{
+    appName:'قريب',heroTitle:'ابحث عن أي خدمة <span class="grad">قريبة منك</span>',
+    heroSub:'اكتب حرفاً، وستظهر لك كل الخيارات',
+    locating:'جاري تحديد موقعك...',locReady:'📍 موقعك محدّد',
+    locErr:'⚠️ يجب السماح بالوصول إلى الموقع',locUnsup:'⚠️ متصفحك لا يدعم تحديد الموقع',
+    emergTitle:'أرقام الطوارئ',amb:'الإسعاف',pol:'الشرطة',fire:'الإطفاء',
+    lost:'أنا تائه — شارك موقعي',lostMsg:'🆘 أنا تائه، أحتاج مساعدة. موقعي:',
+    lostTitle:'هل أنت متأكد؟',lostSub:'سيتم إرسال موقعك الحالي عبر واتساب.',
+    lostPrevLabel:'الرسالة التي ستُرسل',cancel:'إلغاء',confirm:'تأكيد',lostSent:'✅ جاري فتح واتساب...',
+    noLoc:'⚠️ لم نتمكن من تحديد موقعك',
+    recent:'آخر ما بحثت عنه',clear:'مسح',cleared:'تم مسح السجل',
+    searchPh:'ابحث عن أي خدمة...',sectorSub:'اختر النشاط الذي تريد',
+    noResults:'لا توجد نتائج',noSug:'لا توجد نتائج لـ',tryOther:'جرّب كلمة أخرى',
+    searching:'🎯 جاري فتح الخريطة...',
+    regTitle:'سجّل نشاطك مجاناً',regSub:'اجعل عملاءك يجدونك بضغطة واحدة',
+    bName:'اسم النشاط *',bType:'نوع النشاط',bAddr:'العنوان',bPhone:'رقم الهاتف',
+    submit:'سجّل محلك على Google',okTitle:'ممتاز! بياناتك جاهزة',
+    okText:'اضغط على الزر الأحمر لتأكيد التسجيل على Google Business Profile.',
+    openG:'افتح Google Business',easier:'📱 الطريقة الأسهل:',
+    easierText:'1. افتح Google Maps<br>2. اضغط على صورتك<br>3. اختر "إضافة نشاط تجاري"',
+    navHome:'استكشف',navSearch:'ابحث',navAdd:'أضف محلك',
+    sectorsTitle:'الأقسام',activities:'نشاط',footer:'صُنع بـ ❤️ من فريق قريب',
+    nameReq:'⚠️ اكتب اسم النشاط على الأقل',
+    pickTitle:'🌍 اختر دولتك',pickText:'لعرض أرقام الطوارئ الصحيحة لبلدك',
+    aiTitle:'مساعد قريب الذكي',aiStatus:'متصل',aiPh:'اكتب سؤالك...',
+    aiThinking:'جاري التفكير...',aiWelcome:'مرحباً! 👋\nأنا مساعدك الذكي. أخبرني ما تبحث عنه، وسأرشدك لأقرب مكان.',
+    aiOpenMap:'🗺️ افتح الخريطة',aiError:'⚠️ حدث خطأ. حاول مرة أخرى.',
+    aiNoKey:'⚠️ الذكاء الاصطناعي غير مفعّل حالياً.',
+    fav:'المفضلة',favAdd:'⭐ أضف للمفضلة',favRemove:'⭐ إزالة من المفضلة',
+    favAdded:'✅ تمت الإضافة للمفضلة',favRemoved:'تمت الإزالة',favCleared:'تم مسح المفضلة',
+    alertOn:'🔔 تنبيه مُفعّل',alertOff:'🔔 تفعيل التنبيه',
+    alertActivated:'🔔 سيُنبّهك التطبيق عند الاقتراب',
+    alertDeactivated:'تم إيقاف التنبيه',
+    nearbyTitle:'🔔 أنت قريب من مكان في مفضلتك!',
+    nearbyText:'اقتربت من:',nearbyClose:'حسناً',
+    alertNoLoc:'⚠️ نحتاج موقعك لتفعيل التنبيه',
+    viewsTitle:'اختر طريقة العرض',viewsSub:'كيف تريد رؤية هذا المكان؟',
+    viewMap:'خريطة عادية',viewMapDesc:'عرض قياسي',
+    viewStreet:'تجول 360°',viewStreetDesc:'شوارع حقيقية',
+    viewSatellite:'قمر صناعي',viewSatelliteDesc:'صور من الفضاء',
+    viewTransit:'مواصلات',viewTransitDesc:'باصات وقطارات',
+    viewFav:'أضف للمفضلة',viewFavDesc:'احفظ للوصول السريع',
+    viewFavOn:'في المفضلة',viewFavOnDesc:'اضغط للإزالة',
+    placesNearby:'الأماكن القريبة',placesFound:'مكان',placesEmpty:'لا توجد أماكن قريبة في هذا النطاق',
+    placesError:'تعذّر جلب الأماكن. تحقق من الاتصال.',
+    loading:'جاري البحث...',retry:'إعادة المحاولة',
+    openNow:'مفتوح الآن',closedNow:'مغلق',
+    directions:'الاتجاهات',call:'اتصل'
+  },
+  fr:{
+    appName:'Qareeb',heroTitle:'Trouvez un service <span class="grad">près de vous</span>',
+    heroSub:'Tapez une lettre, toutes les options apparaissent',
+    locating:'Localisation...',locReady:'📍 Position détectée',
+    locErr:'⚠️ Autorisez l\'accès à votre position',locUnsup:'⚠️ Navigateur incompatible',
+    emergTitle:'Numéros d\'urgence',amb:'Ambulance',pol:'Police',fire:'Pompiers',
+    lost:'Je suis perdu',lostMsg:'🆘 Je suis perdu. Position:',
+    lostTitle:'Êtes-vous sûr ?',lostSub:'Votre position sera partagée via WhatsApp.',
+    lostPrevLabel:'Message à envoyer',cancel:'Annuler',confirm:'Confirmer',lostSent:'✅ WhatsApp...',
+    noLoc:'⚠️ Position introuvable',recent:'Recherches récentes',clear:'Effacer',cleared:'Effacé',
+    searchPh:'Rechercher...',sectorSub:'Choisissez l\'activité',
+    noResults:'Aucun résultat',noSug:'Aucun résultat pour',tryOther:'Essayez un autre mot',
+    searching:'🎯 Ouverture de la carte...',
+    regTitle:'Inscrivez votre commerce',regSub:'Soyez trouvé en un clic',
+    bName:'Nom *',bType:'Type',bAddr:'Adresse',bPhone:'Téléphone',
+    submit:'S\'inscrire sur Google',okTitle:'Excellent!',okText:'Cliquez sur le bouton rouge.',
+    openG:'Ouvrir Google Business',easier:'📱 Méthode:',
+    easierText:'1. Google Maps<br>2. Votre photo<br>3. "Ajouter un commerce"',
+    navHome:'Explorer',navSearch:'Chercher',navAdd:'Ajouter',
+    sectorsTitle:'Catégories',activities:'activités',footer:'Fait avec ❤️ par Team Qareeb',
+    nameReq:'⚠️ Entrez au moins le nom',
+    pickTitle:'🌍 Choisissez votre pays',pickText:'Pour les numéros d\'urgence',
+    aiTitle:'Assistant Qareeb',aiStatus:'En ligne',aiPh:'Écrivez votre question...',
+    aiThinking:'Réflexion...',aiWelcome:'Bonjour! 👋\nJe suis votre assistant.',
+    aiOpenMap:'🗺️ Ouvrir la carte',aiError:'⚠️ Erreur. Réessayez.',aiNoKey:'⚠️ IA non activée.',
+    fav:'Favoris',favAdd:'⭐ Ajouter aux favoris',favRemove:'⭐ Retirer des favoris',
+    favAdded:'✅ Ajouté aux favoris',favRemoved:'Retiré',favCleared:'Favoris effacés',
+    alertOn:'🔔 Alerte activée',alertOff:'🔔 Activer l\'alerte',
+    alertActivated:'🔔 Vous serez notifié à proximité',
+    alertDeactivated:'Alerte désactivée',
+    nearbyTitle:'🔔 Vous êtes près d\'un favori!',
+    nearbyText:'Vous êtes près de:',nearbyClose:'OK',
+    alertNoLoc:'⚠️ Position requise pour l\'alerte',
+    viewsTitle:'Choisir la vue',viewsSub:'Comment voulez-vous voir ce lieu?',
+    viewMap:'Carte normale',viewMapDesc:'Vue standard',
+    viewStreet:'Vue 360°',viewStreetDesc:'Rues réelles',
+    viewSatellite:'Satellite',viewSatelliteDesc:'Vue de l\'espace',
+    viewTransit:'Transports',viewTransitDesc:'Bus et trains',
+    viewFav:'Ajouter aux favoris',viewFavDesc:'Sauvegarder',
+    viewFavOn:'Dans les favoris',viewFavOnDesc:'Toucher pour retirer',
+    placesNearby:'Lieux à proximité',placesFound:'lieux',placesEmpty:'Aucun lieu trouvé dans cette zone',
+    placesError:'Erreur de chargement. Vérifiez la connexion.',
+    loading:'Recherche...',retry:'Réessayer',
+    openNow:'Ouvert',closedNow:'Fermé',
+    directions:'Itinéraire',call:'Appeler'
+  },
+  en:{
+    appName:'Qareeb',heroTitle:'Find any service <span class="grad">near you</span>',
+    heroSub:'Type one letter, all options appear',
+    locating:'Locating...',locReady:'📍 Location detected',
+    locErr:'⚠️ Please allow location access',locUnsup:'⚠️ Browser not supported',
+    emergTitle:'Emergency Numbers',amb:'Ambulance',pol:'Police',fire:'Fire',
+    lost:'I\'m lost',lostMsg:'🆘 I\'m lost. Location:',
+    lostTitle:'Are you sure?',lostSub:'Your location will be shared via WhatsApp.',
+    lostPrevLabel:'Message to send',cancel:'Cancel',confirm:'Confirm',lostSent:'✅ WhatsApp...',
+    noLoc:'⚠️ Could not get location',recent:'Recent',clear:'Clear',cleared:'Cleared',
+    searchPh:'Search...',sectorSub:'Choose an activity',
+    noResults:'No results',noSug:'No results for',tryOther:'Try another word',
+    searching:'🎯 Opening map...',
+    regTitle:'Register your business',regSub:'Be found in one tap',
+    bName:'Name *',bType:'Type',bAddr:'Address',bPhone:'Phone',
+    submit:'Register on Google',okTitle:'Great!',okText:'Click the red button.',
+    openG:'Open Google Business',easier:'📱 Easiest:',
+    easierText:'1. Google Maps<br>2. Your photo<br>3. "Add a business"',
+    navHome:'Explore',navSearch:'Search',navAdd:'Add',
+    sectorsTitle:'Categories',activities:'activities',footer:'Made with ❤️ by Team Qareeb',
+    nameReq:'⚠️ Enter at least the name',
+    pickTitle:'🌍 Choose your country',pickText:'For emergency numbers',
+    aiTitle:'Qareeb Assistant',aiStatus:'Online',aiPh:'Type your question...',
+    aiThinking:'Thinking...',aiWelcome:'Hi! 👋\nI\'m your AI assistant.',
+    aiOpenMap:'🗺️ Open Map',aiError:'⚠️ Error. Try again.',aiNoKey:'⚠️ AI not activated.',
+    fav:'Favorites',favAdd:'⭐ Add to favorites',favRemove:'⭐ Remove from favorites',
+    favAdded:'✅ Added to favorites',favRemoved:'Removed',favCleared:'Favorites cleared',
+    alertOn:'🔔 Alert on',alertOff:'🔔 Enable alert',
+    alertActivated:'🔔 You will be notified when nearby',
+    alertDeactivated:'Alert disabled',
+    nearbyTitle:'🔔 You are near a favorite!',
+    nearbyText:'You are near:',nearbyClose:'OK',
+    alertNoLoc:'⚠️ Location required for alert',
+    viewsTitle:'Choose view',viewsSub:'How do you want to see this place?',
+    viewMap:'Normal Map',viewMapDesc:'Standard view',
+    viewStreet:'Street View 360°',viewStreetDesc:'Real streets',
+    viewSatellite:'Satellite',viewSatelliteDesc:'From space',
+    viewTransit:'Transit',viewTransitDesc:'Buses and trains',
+    viewFav:'Add to favorites',viewFavDesc:'Save for later',
+    viewFavOn:'In favorites',viewFavOnDesc:'Tap to remove',
+    placesNearby:'Nearby places',placesFound:'places',placesEmpty:'No places found in this area',
+    placesError:'Failed to load places. Check connection.',
+    loading:'Searching...',retry:'Retry',
+    openNow:'Open now',closedNow:'Closed',
+    directions:'Directions',call:'Call'
+  }
+};
+
+const AI_SUG = {
+  ar:['أرخص مطعم مفتوح الآن','مقهى يسمح بالكلاب','فندق فيه موقف سيارات','مطعم للعائلات مع أطفال','أماكن سياحية غير معروفة','مطعم فيه كرسي متحرك'],
+  fr:['Restaurant le moins cher ouvert','Café qui accepte les chiens','Hôtel avec parking','Restaurant familial','Lieux cachés','Restaurant accessible'],
+  en:['Cheapest restaurant open now','Pet friendly cafe','Hotel with parking','Family restaurant kids','Hidden gems nearby','Wheelchair accessible restaurant']
+};
+
+const AI_SYS = {
+  ar:`أنت "قريب" - مساعد ذكي يساعد المستخدمين على إيجاد الأماكن والخدمات القريبة.
+
+🎯 مهمتك:
+- فهم طلبات المستخدم حتى لو كانت معقدة أو فيها عدة شروط
+- استخراج: (نوع المكان) + (الفلاتر المطلوبة)
+- اقتراح بحث ذكي في Google Maps
+
+📚 أمثلة على الفهم الذكي:
+- "أنا في الطريق إلى القصرين، أريد مطعماً تونسياً رخيصاً مفتوحاً الآن وفيه موقف سيارات"
+  → سأبحث لك عن: [SEARCH:tunisian restaurant cheap open now parking]
+- "أرخص فندق قريب"
+  → [SEARCH:cheapest hotel]
+- "مقهى يسمح بالكلاب"
+  → [SEARCH:pet friendly cafe]
+- "مطعم للعائلات مع أطفال"
+  → [SEARCH:family restaurant playground]
+- "موقف سيارات قريب"
+  → [SEARCH:parking]
+- "مطعم فيه مدخل لكرسي متحرك"
+  → [SEARCH:wheelchair accessible restaurant]
+- "أماكن سياحية غير معروفة"
+  → [SEARCH:hidden gems attractions]
+
+🔑 الفلاتر المهمة بالانجليزية:
+- cheap / affordable / luxury
+- open now / 24 hours
+- has parking / free parking
+- family friendly / kids
+- pet friendly
+- wheelchair accessible
+- highly rated / top rated
+
+📝 قواعد الإخراج:
+1. ردك قصير جداً (سطر إلى سطرين كحد أقصى)
+2. اذكر ما فهمته من الطلب
+3. أضف في النهاية على سطر منفصل: [SEARCH:الكلمات_بالانجليزية]
+4. إذا كان الطلب غير واضح، اسأل سؤالاً واحداً فقط
+5. لا تكرر التحيات بعد أول رسالة`,
+  fr:`Tu es "Qareeb" - assistant IA qui aide à trouver des lieux et services proches.
+Règles:
+1. Réponse très courte (1-2 lignes max)
+2. Résume ce que tu as compris
+3. Ajoute à la fin: [SEARCH:english_words]
+4. Si peu clair, pose UNE seule question`,
+  en:`You are "Qareeb" - an AI assistant helping users find nearby places and services.
+Rules:
+1. Very short reply (1-2 lines max)
+2. Summarize what you understood
+3. Add at the end: [SEARCH:english_words]
+4. If unclear, ask ONE question only`
+};
+
+let currentLang='ar';
+let currentCountry=null;
+let pendingLostLink=null;
+let userLocation=null;
+let currentSectorId=null;
+let currentViewActivity=null;
+let currentPlacesActivity=null;
+let currentPlacesData=[];
+
+function t(k){return (T[currentLang]&&T[currentLang][k])||T.en[k]||k}
+
+/* ============ SECTORS ============ */
+const sectors = [
+  {id:'tourism',icon:'🏛️',ar:'السياحة',fr:'Tourisme',en:'Tourism'},
+  {id:'health',icon:'🏥',ar:'الصحة',fr:'Santé',en:'Health'},
+  {id:'business',icon:'🏭',ar:'الأعمال والصناعة',fr:'Affaires',en:'Business'},
+  {id:'transport',icon:'🚗',ar:'النقل والمواصلات',fr:'Transport',en:'Transport'},
+  {id:'beauty',icon:'✂️',ar:'التجميل',fr:'Beauté',en:'Beauty'},
+  {id:'food',icon:'🍽️',ar:'الطعام',fr:'Nourriture',en:'Food'},
+  {id:'grocery',icon:'🛒',ar:'البقالة',fr:'Épicerie',en:'Grocery'},
+  {id:'clothes',icon:'👕',ar:'الملابس',fr:'Vêtements',en:'Clothes'},
+  {id:'tech',icon:'📱',ar:'الإلكترونيات',fr:'Électronique',en:'Electronics'},
+  {id:'home',icon:'🔨',ar:'خدمات منزلية',fr:'Maison',en:'Home'},
+  {id:'car',icon:'🚘',ar:'خدمات السيارات',fr:'Auto',en:'Auto'},
+  {id:'travel',icon:'✈️',ar:'السفر والإقامة',fr:'Voyage',en:'Travel'},
+  {id:'edu',icon:'🎓',ar:'التعليم',fr:'Éducation',en:'Education'},
+  {id:'money',icon:'💰',ar:'المال والبنوك',fr:'Argent',en:'Money'},
+  {id:'legal',icon:'⚖️',ar:'القانون',fr:'Justice',en:'Legal'},
+  {id:'sport',icon:'🏋️',ar:'الرياضة',fr:'Sport',en:'Sport'},
+  {id:'religion',icon:'🕌',ar:'الدين',fr:'Religion',en:'Religion'},
+  {id:'pets',icon:'🐾',ar:'الحيوانات',fr:'Animaux',en:'Pets'},
+  {id:'gifts',icon:'🎁',ar:'الهدايا',fr:'Cadeaux',en:'Gifts'},
+  {id:'general',icon:'📦',ar:'خدمات عامة',fr:'Général',en:'General'}
+];
+
+/* ============ ACTIVITIES ============ */
+const activities = [
+  {i:'🏛️',q:'museum',s:'tourism',ar:'متحف',fr:'Musée',en:'Museum'},
+  {i:'🏰',q:'castle',s:'tourism',ar:'قلعة',fr:'Château',en:'Castle'},
+  {i:'🏯',q:'palace',s:'tourism',ar:'قصر',fr:'Palais',en:'Palace'},
+  {i:'🗿',q:'historical site',s:'tourism',ar:'موقع تاريخي',fr:'Site historique',en:'Historical site'},
+  {i:'🕌',q:'old city',s:'tourism',ar:'مدينة عتيقة',fr:'Médina',en:'Old city'},
+  {i:'🛍️',q:'souk',s:'tourism',ar:'سوق تقليدي',fr:'Souk',en:'Souk'},
+  {i:'🏞️',q:'nature reserve',s:'tourism',ar:'محمية طبيعية',fr:'Réserve naturelle',en:'Nature reserve'},
+  {i:'🌳',q:'forest',s:'tourism',ar:'غابة',fr:'Forêt',en:'Forest'},
+  {i:'💦',q:'waterfall',s:'tourism',ar:'شلال',fr:'Cascade',en:'Waterfall'},
+  {i:'🌊',q:'lake',s:'tourism',ar:'بحيرة',fr:'Lac',en:'Lake'},
+  {i:'🏔️',q:'mountain',s:'tourism',ar:'جبل',fr:'Montagne',en:'Mountain'},
+  {i:'🏜️',q:'desert',s:'tourism',ar:'صحراء',fr:'Désert',en:'Desert'},
+  {i:'🏝️',q:'island',s:'tourism',ar:'جزيرة',fr:'Île',en:'Island'},
+  {i:'🏖️',q:'beach',s:'tourism',ar:'شاطئ',fr:'Plage',en:'Beach'},
+  {i:'🕳️',q:'cave',s:'tourism',ar:'كهف',fr:'Grotte',en:'Cave'},
+  {i:'🌴',q:'oasis',s:'tourism',ar:'واحة',fr:'Oasis',en:'Oasis'},
+  {i:'🐘',q:'zoo',s:'tourism',ar:'حديقة حيوان',fr:'Zoo',en:'Zoo'},
+  {i:'🐠',q:'aquarium',s:'tourism',ar:'حوض أسماك',fr:'Aquarium',en:'Aquarium'},
+  {i:'🎢',q:'amusement park',s:'tourism',ar:'مدينة ملاهي',fr:'Parc d\'attractions',en:'Amusement park'},
+  {i:'💧',q:'water park',s:'tourism',ar:'مدينة ألعاب مائية',fr:'Parc aquatique',en:'Water park'},
+  {i:'🎨',q:'art gallery',s:'tourism',ar:'معرض فني',fr:'Galerie d\'art',en:'Art gallery'},
+  {i:'🎭',q:'theater',s:'tourism',ar:'مسرح',fr:'Théâtre',en:'Theater'},
+  {i:'📸',q:'viewpoint',s:'tourism',ar:'نقطة مشاهدة',fr:'Point de vue',en:'Viewpoint'},
+  {i:'🚡',q:'cable car',s:'tourism',ar:'تلفريك',fr:'Téléphérique',en:'Cable car'},
+  {i:'🚶',q:'tour guide',s:'tourism',ar:'مرشد سياحي',fr:'Guide',en:'Tour guide'},
+
+  {i:'🏥',q:'hospital',s:'health',ar:'مستشفى',fr:'Hôpital',en:'Hospital'},
+  {i:'🩺',q:'clinic',s:'health',ar:'عيادة',fr:'Clinique',en:'Clinic'},
+  {i:'👨‍⚕️',q:'doctor',s:'health',ar:'طبيب عام',fr:'Médecin',en:'Doctor'},
+  {i:'🦷',q:'dentist',s:'health',ar:'طبيب أسنان',fr:'Dentiste',en:'Dentist'},
+  {i:'❤️',q:'cardiologist',s:'health',ar:'طبيب قلب',fr:'Cardiologue',en:'Cardiologist'},
+  {i:'🧠',q:'neurologist',s:'health',ar:'طبيب أعصاب',fr:'Neurologue',en:'Neurologist'},
+  {i:'🧠',q:'psychologist',s:'health',ar:'طبيب نفسي',fr:'Psychologue',en:'Psychologist'},
+  {i:'👁️',q:'eye doctor',s:'health',ar:'طبيب عيون',fr:'Ophtalmologue',en:'Eye doctor'},
+  {i:'👓',q:'optician',s:'health',ar:'بصريات',fr:'Opticien',en:'Optician'},
+  {i:'👂',q:'ENT specialist',s:'health',ar:'أنف وأذن',fr:'ORL',en:'ENT'},
+  {i:'🦴',q:'orthopedist',s:'health',ar:'طبيب عظام',fr:'Orthopédiste',en:'Orthopedist'},
+  {i:'🧴',q:'dermatologist',s:'health',ar:'طبيب جلدية',fr:'Dermatologue',en:'Dermatologist'},
+  {i:'💅',q:'plastic surgeon',s:'health',ar:'جراح تجميل',fr:'Chirurgien esthétique',en:'Plastic surgeon'},
+  {i:'🫁',q:'pulmonologist',s:'health',ar:'طبيب صدر',fr:'Pneumologue',en:'Pulmonologist'},
+  {i:'🍽️',q:'gastroenterologist',s:'health',ar:'طبيب هضمي',fr:'Gastro-entérologue',en:'Gastroenterologist'},
+  {i:'👶',q:'pediatrician',s:'health',ar:'طبيب أطفال',fr:'Pédiatre',en:'Pediatrician'},
+  {i:'🤰',q:'gynecologist',s:'health',ar:'طبيب نساء',fr:'Gynécologue',en:'Gynecologist'},
+  {i:'🚹',q:'urologist',s:'health',ar:'طبيب مسالك',fr:'Urologue',en:'Urologist'},
+  {i:'🎗️',q:'oncologist',s:'health',ar:'طبيب أورام',fr:'Oncologue',en:'Oncologist'},
+  {i:'💉',q:'endocrinologist',s:'health',ar:'طبيب غدد',fr:'Endocrinologue',en:'Endocrinologist'},
+  {i:'🥗',q:'nutritionist',s:'health',ar:'أخصائي تغذية',fr:'Nutritionniste',en:'Nutritionist'},
+  {i:'🗣️',q:'speech therapist',s:'health',ar:'أخصائي نطق',fr:'Orthophoniste',en:'Speech therapist'},
+  {i:'💊',q:'pharmacy',s:'health',ar:'صيدلية',fr:'Pharmacie',en:'Pharmacy'},
+  {i:'🧪',q:'medical laboratory',s:'health',ar:'مختبر تحاليل',fr:'Laboratoire',en:'Laboratory'},
+  {i:'📡',q:'radiology',s:'health',ar:'مركز أشعة',fr:'Radiologie',en:'Radiology'},
+  {i:'💆',q:'physiotherapy',s:'health',ar:'علاج طبيعي',fr:'Kinésithérapie',en:'Physiotherapy'},
+
+  {i:'🚢',q:'import company',s:'business',ar:'شركة استيراد',fr:'Import',en:'Import'},
+  {i:'📤',q:'export company',s:'business',ar:'شركة تصدير',fr:'Export',en:'Export'},
+  {i:'🏢',q:'trading company',s:'business',ar:'شركة تجارية',fr:'Commerce',en:'Trading'},
+  {i:'📦',q:'warehouse',s:'business',ar:'مخزن',fr:'Entrepôt',en:'Warehouse'},
+  {i:'🏭',q:'factory',s:'business',ar:'مصنع',fr:'Usine',en:'Factory'},
+  {i:'⚙️',q:'industrial workshop',s:'business',ar:'ورشة صناعية',fr:'Atelier',en:'Workshop'},
+  {i:'🌾',q:'animal feed',s:'business',ar:'شركة أعلاف',fr:'Aliments animaux',en:'Animal feed'},
+  {i:'🐄',q:'livestock farm',s:'business',ar:'مزرعة مواشي',fr:'Élevage',en:'Livestock'},
+  {i:'🌱',q:'plant nursery',s:'business',ar:'مشتل زراعي',fr:'Pépinière',en:'Nursery'},
+  {i:'📊',q:'accounting firm',s:'business',ar:'مكتب محاسبة',fr:'Comptabilité',en:'Accounting'},
+  {i:'💼',q:'consulting firm',s:'business',ar:'مكتب استشارات',fr:'Conseil',en:'Consulting'},
+  {i:'👥',q:'recruitment agency',s:'business',ar:'شركة توظيف',fr:'Recrutement',en:'Recruitment'},
+  {i:'🏭',q:'industrial zone',s:'business',ar:'منطقة صناعية',fr:'Zone industrielle',en:'Industrial zone'},
+  {i:'🚚',q:'freight company',s:'business',ar:'شركة شحن',fr:'Fret',en:'Freight'},
+  {i:'🛃',q:'customs broker',s:'business',ar:'تخليص جمركي',fr:'Dédouanement',en:'Customs'},
+  {i:'🎯',q:'marketing agency',s:'business',ar:'وكالة تسويق',fr:'Marketing',en:'Marketing'},
+
+  {i:'🚂',q:'train station',s:'transport',ar:'محطة قطار',fr:'Gare',en:'Train station'},
+  {i:'🚇',q:'metro station',s:'transport',ar:'محطة مترو',fr:'Métro',en:'Metro'},
+  {i:'🚌',q:'bus station',s:'transport',ar:'محطة حافلات',fr:'Gare routière',en:'Bus station'},
+  {i:'🚕',q:'taxi stand',s:'transport',ar:'موقف تاكسي',fr:'Station taxi',en:'Taxi stand'},
+  {i:'🚖',q:'airport taxi',s:'transport',ar:'تاكسي مطار',fr:'Taxi aéroport',en:'Airport taxi'},
+  {i:'🚘',q:'ride hailing',s:'transport',ar:'تطبيق نقل',fr:'VTC',en:'Ride hailing'},
+  {i:'🚐',q:'minibus',s:'transport',ar:'ميكروباص',fr:'Minibus',en:'Minibus'},
+  {i:'🚚',q:'trucking',s:'transport',ar:'شحن بري',fr:'Camion',en:'Trucking'},
+  {i:'🚢',q:'shipping',s:'transport',ar:'شحن بحري',fr:'Maritime',en:'Shipping'},
+  {i:'✈️',q:'airport',s:'transport',ar:'مطار',fr:'Aéroport',en:'Airport'},
+  {i:'⚓',q:'port',s:'transport',ar:'ميناء',fr:'Port',en:'Port'},
+  {i:'⛵',q:'marina',s:'transport',ar:'مارينا',fr:'Marina',en:'Marina'},
+  {i:'🚲',q:'bicycle rental',s:'transport',ar:'تأجير دراجات',fr:'Location vélos',en:'Bicycle rental'},
+  {i:'🛴',q:'scooter rental',s:'transport',ar:'تأجير سكوتر',fr:'Scooters',en:'Scooter rental'},
+  {i:'🅿️',q:'parking',s:'transport',ar:'موقف سيارات',fr:'Parking',en:'Parking'},
+  {i:'📦',q:'delivery service',s:'transport',ar:'خدمة توصيل',fr:'Livraison',en:'Delivery'},
+  {i:'🚦',q:'driving school',s:'transport',ar:'مدرسة سياقة',fr:'Auto-école',en:'Driving school'},
+  {i:'🔧',q:'car repair',s:'transport',ar:'ورشة سيارات',fr:'Garage',en:'Car repair'},
+  {i:'🛞',q:'tire repair',s:'transport',ar:'إصلاح إطارات',fr:'Pneus',en:'Tire repair'},
+  {i:'🚿',q:'car wash',s:'transport',ar:'غسيل سيارات',fr:'Lavage auto',en:'Car wash'},
+  {i:'🚗',q:'car rental',s:'transport',ar:'تأجير سيارات',fr:'Location voiture',en:'Car rental'},
+  {i:'⛽',q:'gas station',s:'transport',ar:'محطة وقود',fr:'Station-service',en:'Gas station'},
+
+  {i:'✂️',q:'barber',s:'beauty',ar:'حلاق',fr:'Coiffeur',en:'Barber'},
+  {i:'💅',q:'beauty salon',s:'beauty',ar:'صالون تجميل',fr:'Beauté',en:'Beauty salon'},
+  {i:'💆',q:'spa',s:'beauty',ar:'سبا',fr:'Spa',en:'Spa'},
+  {i:'💆‍♂️',q:'massage',s:'beauty',ar:'مساج',fr:'Massage',en:'Massage'},
+  {i:'🌸',q:'perfume shop',s:'beauty',ar:'محل عطور',fr:'Parfumerie',en:'Perfume'},
+  {i:'💄',q:'makeup shop',s:'beauty',ar:'محل ماكياج',fr:'Maquillage',en:'Makeup'},
+
+  {i:'🍽️',q:'restaurant',s:'food',ar:'مطعم',fr:'Restaurant',en:'Restaurant'},
+  {i:'☕',q:'cafe',s:'food',ar:'مقهى',fr:'Café',en:'Cafe'},
+  {i:'🥖',q:'bakery',s:'food',ar:'مخبزة',fr:'Boulangerie',en:'Bakery'},
+  {i:'🍰',q:'pastry shop',s:'food',ar:'حلويات',fr:'Pâtisserie',en:'Pastry'},
+  {i:'🍦',q:'ice cream',s:'food',ar:'آيس كريم',fr:'Glace',en:'Ice cream'},
+  {i:'🍔',q:'fast food',s:'food',ar:'وجبات سريعة',fr:'Fast-food',en:'Fast food'},
+  {i:'🍖',q:'grill',s:'food',ar:'مشاوي',fr:'Grill',en:'Grill'},
+  {i:'🍕',q:'pizza',s:'food',ar:'بيتزا',fr:'Pizza',en:'Pizza'},
+  {i:'🐟',q:'seafood',s:'food',ar:'سمك',fr:'Poisson',en:'Seafood'},
+
+  {i:'🏪',q:'grocery',s:'grocery',ar:'بقالة',fr:'Épicerie',en:'Grocery'},
+  {i:'🥩',q:'butcher',s:'grocery',ar:'جزارة',fr:'Boucherie',en:'Butcher'},
+  {i:'🐔',q:'poultry',s:'grocery',ar:'دواجن',fr:'Volaille',en:'Poultry'},
+  {i:'🌿',q:'herbalist',s:'grocery',ar:'عطارة',fr:'Herboriste',en:'Herbalist'},
+  {i:'🛒',q:'supermarket',s:'grocery',ar:'سوبر ماركت',fr:'Supermarché',en:'Supermarket'},
+
+  {i:'👔',q:'menswear',s:'clothes',ar:'ملابس رجالية',fr:'Homme',en:'Menswear'},
+  {i:'👗',q:'womenswear',s:'clothes',ar:'ملابس نسائية',fr:'Femme',en:'Womenswear'},
+  {i:'🧒',q:'kids clothes',s:'clothes',ar:'ملابس أطفال',fr:'Enfants',en:'Kids'},
+  {i:'👟',q:'shoe shop',s:'clothes',ar:'أحذية',fr:'Chaussures',en:'Shoes'},
+  {i:'👜',q:'bags shop',s:'clothes',ar:'حقائب',fr:'Sacs',en:'Bags'},
+  {i:'🪡',q:'tailor',s:'clothes',ar:'خياط',fr:'Tailleur',en:'Tailor'},
+
+  {i:'📱',q:'mobile shop',s:'tech',ar:'هواتف',fr:'Téléphones',en:'Phones'},
+  {i:'💻',q:'computer shop',s:'tech',ar:'حواسيب',fr:'Ordinateurs',en:'Computers'},
+  {i:'🔧',q:'phone repair',s:'tech',ar:'إصلاح هواتف',fr:'Réparation',en:'Phone repair'},
+  {i:'🔌',q:'electronics',s:'tech',ar:'أجهزة كهربائية',fr:'Électroménager',en:'Appliances'},
+
+  {i:'⚡',q:'electrician',s:'home',ar:'كهربائي',fr:'Électricien',en:'Electrician'},
+  {i:'🚿',q:'plumber',s:'home',ar:'سباك',fr:'Plombier',en:'Plumber'},
+  {i:'🪚',q:'carpenter',s:'home',ar:'نجار',fr:'Menuisier',en:'Carpenter'},
+  {i:'🎨',q:'painter',s:'home',ar:'دهّان',fr:'Peintre',en:'Painter'},
+  {i:'🧹',q:'cleaning',s:'home',ar:'تنظيف منازل',fr:'Nettoyage',en:'Cleaning'},
+  {i:'❄️',q:'ac repair',s:'home',ar:'صيانة مكيفات',fr:'Climatisation',en:'AC repair'},
+
+  {i:'🚘',q:'car dealer',s:'car',ar:'معرض سيارات',fr:'Concessionnaire',en:'Car dealer'},
+  {i:'⚙️',q:'auto parts',s:'car',ar:'قطع غيار',fr:'Pièces auto',en:'Auto parts'},
+
+  {i:'✈️',q:'travel agency',s:'travel',ar:'مكتب سفريات',fr:'Agence de voyage',en:'Travel agency'},
+  {i:'🏨',q:'hotel',s:'travel',ar:'فندق',fr:'Hôtel',en:'Hotel'},
+  {i:'🏠',q:'apartments',s:'travel',ar:'شقق فاخرة',fr:'Appartements',en:'Apartments'},
+
+  {i:'🏫',q:'school',s:'edu',ar:'مدرسة',fr:'École',en:'School'},
+  {i:'🎓',q:'university',s:'edu',ar:'جامعة',fr:'Université',en:'University'},
+  {i:'👶',q:'nursery',s:'edu',ar:'حضانة',fr:'Crèche',en:'Nursery'},
+
+  {i:'🏦',q:'bank',s:'money',ar:'بنك',fr:'Banque',en:'Bank'},
+  {i:'💳',q:'atm',s:'money',ar:'صراف آلي',fr:'Distributeur',en:'ATM'},
+  {i:'💱',q:'currency exchange',s:'money',ar:'مكتب صرافة',fr:'Bureau de change',en:'Exchange'},
+
+  {i:'⚖️',q:'lawyer',s:'legal',ar:'محامي',fr:'Avocat',en:'Lawyer'},
+  {i:'📜',q:'notary',s:'legal',ar:'موثق',fr:'Notaire',en:'Notary'},
+
+  {i:'🏋️',q:'gym',s:'sport',ar:'صالة رياضية',fr:'Salle de sport',en:'Gym'},
+  {i:'🏊',q:'swimming pool',s:'sport',ar:'حمام سباحة',fr:'Piscine',en:'Swimming pool'},
+  {i:'🎬',q:'cinema',s:'sport',ar:'سينما',fr:'Cinéma',en:'Cinema'},
+
+  {i:'🕌',q:'mosque',s:'religion',ar:'مسجد',fr:'Mosquée',en:'Mosque'},
+  {i:'⛪',q:'church',s:'religion',ar:'كنيسة',fr:'Église',en:'Church'},
+
+  {i:'🏥',q:'veterinarian',s:'pets',ar:'عيادة بيطرية',fr:'Vétérinaire',en:'Vet'},
+  {i:'🐕',q:'pet shop',s:'pets',ar:'محل حيوانات',fr:'Animalerie',en:'Pet shop'},
+
+  {i:'🎁',q:'gift shop',s:'gifts',ar:'محل هدايا',fr:'Cadeaux',en:'Gifts'},
+  {i:'💎',q:'jewelry',s:'gifts',ar:'مجوهرات',fr:'Bijouterie',en:'Jewelry'},
+  {i:'🌸',q:'florist',s:'gifts',ar:'محل زهور',fr:'Fleuriste',en:'Florist'},
+
+  {i:'🚕',q:'taxi',s:'general',ar:'تاكسي',fr:'Taxi',en:'Taxi'},
+  {i:'🛵',q:'delivery',s:'general',ar:'توصيل',fr:'Livraison',en:'Delivery'},
+  {i:'👕',q:'laundry',s:'general',ar:'مغسلة ملابس',fr:'Pressing',en:'Laundry'},
+  {i:'🔑',q:'key maker',s:'general',ar:'صانع مفاتيح',fr:'Serrurier',en:'Key maker'},
+  {i:'📮',q:'post office',s:'general',ar:'مكتب بريد',fr:'Poste',en:'Post office'}
+];
+
+/* ============ GEO CATEGORIES ============ */
+const GEO_CATEGORIES = {
+  'hospital':'healthcare.hospital','clinic':'healthcare.clinic_or_praxis','doctor':'healthcare',
+  'dentist':'healthcare.dentist','pharmacy':'healthcare.pharmacy','medical laboratory':'healthcare.laboratory',
+  'eye doctor':'healthcare','optician':'healthcare.optometrist','ENT specialist':'healthcare',
+  'orthopedist':'healthcare','dermatologist':'healthcare','plastic surgeon':'healthcare',
+  'pulmonologist':'healthcare','gastroenterologist':'healthcare','pediatrician':'healthcare',
+  'gynecologist':'healthcare','urologist':'healthcare','oncologist':'healthcare',
+  'endocrinologist':'healthcare','nutritionist':'healthcare','speech therapist':'healthcare',
+  'physiotherapy':'healthcare.physiotherapist','psychologist':'healthcare.psychologist',
+  'cardiologist':'healthcare','neurologist':'healthcare','radiology':'healthcare',
+  'veterinarian':'healthcare.veterinary',
+  'restaurant':'catering.restaurant','cafe':'catering.cafe','bakery':'commercial.food_and_drink.bakery',
+  'pastry shop':'commercial.food_and_drink.confectionery','ice cream':'catering.ice_cream',
+  'fast food':'catering.fast_food','grill':'catering.restaurant.barbecue','pizza':'catering.pizza',
+  'seafood':'catering.restaurant.seafood',
+  'grocery':'commercial.food_and_drink','butcher':'commercial.food_and_drink.butcher',
+  'supermarket':'commercial.supermarket','herbalist':'commercial.health_and_beauty',
+  'poultry':'commercial.food_and_drink',
+  'menswear':'commercial.clothing.mens_clothing','womenswear':'commercial.clothing.women_clothing',
+  'kids clothes':'commercial.clothing.kids_clothing','shoe shop':'commercial.clothing.shoes',
+  'bags shop':'commercial.clothing.bags','tailor':'service.tailor',
+  'mobile shop':'commercial.elektronics','computer shop':'commercial.elektronics',
+  'phone repair':'service.electronics_repair','electronics':'commercial.elektronics',
+  'electrician':'service.electrician','plumber':'service.plumber','carpenter':'service.carpenter',
+  'painter':'service.painter','cleaning':'service.cleaning','ac repair':'service',
+  'car dealer':'commercial.vehicle','auto parts':'commercial.vehicle','car repair':'service.vehicle.repair',
+  'tire repair':'service.vehicle.repair','car wash':'service.vehicle.wash','car rental':'service.vehicle.rental',
+  'gas station':'service.vehicle.fuel',
+  'taxi stand':'service.taxi','airport taxi':'service.taxi','ride hailing':'service.taxi',
+  'parking':'parking','airport':'airport','train station':'public_transport.train',
+  'bus station':'public_transport.bus','metro station':'public_transport.subway',
+  'port':'port','marina':'port','bicycle rental':'service.vehicle.rental','scooter rental':'service.vehicle.rental',
+  'barber':'service.beauty.hairdresser','beauty salon':'service.beauty','spa':'service.beauty.spa',
+  'massage':'service.beauty.massage','perfume shop':'commercial.health_and_beauty',
+  'makeup shop':'commercial.health_and_beauty',
+  'museum':'entertainment.museum','castle':'tourism.sights.castle','palace':'tourism.sights',
+  'historical site':'tourism.sights','old city':'tourism.sights','souk':'commercial.marketplace',
+  'nature reserve':'national_park','forest':'natural.forest','waterfall':'natural.water.waterfall',
+  'lake':'natural.water','mountain':'natural.mountain','desert':'natural','island':'natural',
+  'beach':'beach','cave':'natural.cave','oasis':'natural','zoo':'entertainment.zoo',
+  'aquarium':'entertainment.aquarium','amusement park':'entertainment.theme_park',
+  'water park':'entertainment.water_park','art gallery':'entertainment.museum',
+  'theater':'entertainment.culture.theatre','viewpoint':'tourism.sights',
+  'cable car':'tourism.attraction','tour guide':'tourism',
+  'gym':'sport.fitness','swimming pool':'sport.swimming','cinema':'entertainment.cinema',
+  'mosque':'religion.place_of_worship.muslim','church':'religion.place_of_worship.christian',
+  'travel agency':'service.travel_agency','hotel':'accommodation.hotel','apartments':'accommodation',
+  'school':'education.school','university':'education.university','nursery':'service.childcare',
+  'bank':'service.financial.bank','atm':'service.financial.atm','currency exchange':'service.financial.currency_exchange',
+  'lawyer':'service','notary':'service','pet shop':'commercial.pet',
+  'gift shop':'commercial.gift_and_souvenir','jewelry':'commercial.jewelry','florist':'commercial.florist',
+  'taxi':'service.taxi','delivery':'service','laundry':'service.laundry','key maker':'service','post office':'service.post'
+};
+
+/* ============ OPEN URL ============ */
+function openURL(url){
+  const link=document.createElement('a');
+  link.href=url;link.target='_blank';link.rel='noopener noreferrer';
+  link.style.cssText='position:fixed;top:-9999px;left:-9999px;';
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(()=>{if(link.parentNode)link.parentNode.removeChild(link)},200);
+}
+
+function buildURL(query, mode){
+  const q=encodeURIComponent(query);
+  if(mode==='satellite')return 'https://www.google.com/maps/search/'+q+'/data=!3m1!1e3';
+  if(mode==='transit')return 'https://www.google.com/maps/dir/?api=1&destination='+q+'&travelmode=transit';
+  if(mode==='street')return 'https://www.google.com/maps/@?api=1&map_action=pano&query='+q;
+  return 'https://www.google.com/maps/search/?api=1&query='+q;
+}
+
+/* ============ LOCATION ============ */
+const LOC_KEY='qareeb_loc_v12';
+const LOC_AGE=1000*60*30;
+function loadLoc(){try{const d=JSON.parse(localStorage.getItem(LOC_KEY));if(d&&d.time&&(Date.now()-d.time)<LOC_AGE)return{lat:d.lat,lng:d.lng}}catch(e){}return null}
+function saveLoc(l){try{localStorage.setItem(LOC_KEY,JSON.stringify({lat:l.lat,lng:l.lng,time:Date.now()}))}catch(e){}}
+function updateLocUI(state,msg){
+  const el=document.getElementById('locPill'),txt=document.getElementById('locText');
+  if(!el)return;el.className='loc-pill '+state;txt.textContent=msg;
+}
+function requestLocation(){
+  return new Promise(resolve=>{
+    if(!navigator.geolocation){updateLocUI('error',t('locUnsup'));resolve(null);return}
+    const c=loadLoc();
+    if(c){userLocation=c;updateLocUI('',t('locReady'));resolve(c);return}
+    updateLocUI('pending',t('locating'));
+    navigator.geolocation.getCurrentPosition(
+      p=>{const l={lat:p.coords.latitude,lng:p.coords.longitude};userLocation=l;saveLoc(l);updateLocUI('',t('locReady'));resolve(l)},
+      e=>{updateLocUI('error',t('locErr'));resolve(null)},
+      {enableHighAccuracy:false,timeout:8000,maximumAge:LOC_AGE}
+    );
+  });
+}
+
+/* ============ FAVORITES ============ */
+const FAV_KEY='qareeb_favs_v12';
+function loadFavs(){try{return JSON.parse(localStorage.getItem(FAV_KEY))||[]}catch(e){return[]}}
+function saveFavs(a){try{localStorage.setItem(FAV_KEY,JSON.stringify(a))}catch(e){}}
+function isFav(act){return loadFavs().some(f=>f.q===act.q&&f.s===act.s)}
+function toggleFav(act){
+  let favs=loadFavs();
+  const idx=favs.findIndex(f=>f.q===act.q&&f.s===act.s);
+  if(idx>=0){favs.splice(idx,1);saveFavs(favs);showToast(t('favRemoved'))}
+  else{favs.unshift({q:act.q,s:act.s,i:act.i,ar:act.ar,fr:act.fr,en:act.en,alert:false,alertLat:null,alertLng:null});saveFavs(favs);showToast(t('favAdded'))}
+  renderFavs();renderActivitiesRefresh();
+}
+function clearFavs(){saveFavs([]);renderFavs();showToast(t('favCleared'))}
+function renderFavs(){
+  const favs=loadFavs();
+  const sec=document.getElementById('favSection');
+  const chips=document.getElementById('favChips');
+  const titleEl=document.getElementById('favTitle');
+  const clearBtn=document.getElementById('favClear');
+  if(!sec)return;
+  titleEl.textContent=t('fav');
+  clearBtn.textContent=t('clear');
+  if(favs.length===0){sec.classList.remove('show');return}
+  sec.classList.add('show');
+  chips.innerHTML='';
+  favs.forEach(f=>{
+    const act={q:f.q,s:f.s,i:f.i,ar:f.ar,fr:f.fr,en:f.en};
+    const chip=document.createElement('button');
+    chip.className='fav-chip'+(f.alert?' alert-on':'');
+    chip.innerHTML=f.i+' '+(f[currentLang]||f.en)+(f.alert?' <span class="bell">🔔</span>':'');
+    chip.addEventListener('click',()=>openViewsSheet(act));
+    chips.appendChild(chip);
+  });
+}
+function renderActivitiesRefresh(){
+  if(currentSectorId){renderSectorActivities(document.getElementById('sectorSearch').value)}
+}
+
+/* ============ NEARBY ALERTS ============ */
+function checkNearbyAlerts(){
+  if(!userLocation)return;
+  const favs=loadFavs();
+  const nearby=favs.filter(f=>{
+    if(!f.alert||!f.alertLat||!f.alertLng)return false;
+    return haversine(userLocation.lat,userLocation.lng,f.alertLat,f.alertLng)<500;
+  });
+  if(nearby.length===0)return;
+  const name=nearby[0][currentLang]||nearby[0].en;
+  document.getElementById('nbTitle').textContent=t('nearbyTitle');
+  document.getElementById('nbText').textContent=t('nearbyText')+' '+name;
+  document.getElementById('nearbyBanner').classList.add('show');
+}
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371000;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function closeNearby(){document.getElementById('nearbyBanner').classList.remove('show')}
+
+/* ============ VIEWS SHEET ============ */
+function openViewsSheet(act){
+  currentViewActivity=act;
+  const ov=document.getElementById('viewsOverlay');
+  const grid=document.getElementById('viewsGrid');
+  document.getElementById('viewsIcon').textContent=act.i||'📍';
+  document.getElementById('viewsTitle').textContent=act[currentLang]||act.en||act.q||'📍';
+  document.getElementById('viewsSub').textContent=t('viewsSub');
+  grid.innerHTML='';
+  const favOn=isFav(act);
+  const options=[
+    {key:'map',ico:'🗺️',lbl:t('viewMap'),desc:t('viewMapDesc'),fn:()=>openURL(buildURL(act.q,'map'))},
+    {key:'street',ico:'🚶',lbl:t('viewStreet'),desc:t('viewStreetDesc'),fn:()=>openURL(buildURL(act.q,'street'))},
+    {key:'satellite',ico:'🛰️',lbl:t('viewSatellite'),desc:t('viewSatelliteDesc'),fn:()=>openURL(buildURL(act.q,'satellite'))},
+    {key:'transit',ico:'🚇',lbl:t('viewTransit'),desc:t('viewTransitDesc'),fn:()=>openURL(buildURL(act.q,'transit'))},
+    {key:'fav',ico:favOn?'⭐':'☆',lbl:favOn?t('viewFavOn'):t('viewFav'),desc:favOn?t('viewFavOnDesc'):t('viewFavDesc'),isFav:true}
+  ];
+  options.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='view-btn'+(o.isFav?' star-btn':'')+(o.isFav&&favOn?' on':'');
+    btn.innerHTML=`<div class="vb-ico">${o.ico}</div><div class="vb-lbl">${o.lbl}</div><div class="vb-desc">${o.desc}</div>`;
+    btn.addEventListener('click',()=>{
+      if(o.isFav){toggleFav(act);closeViewsSheet()}
+      else{closeViewsSheet();setTimeout(o.fn,150)}
+    });
+    grid.appendChild(btn);
+  });
+  ov.classList.add('show');
+}
+function closeViewsSheet(){
+  document.getElementById('viewsOverlay').classList.remove('show');
+  currentViewActivity=null;
+}
+
+/* ============ COUNTRY & LANG ============ */
+function detect(){
+  let sl=null,sc=null;
+  try{sl=localStorage.getItem('qareeb_lang_v12');sc=localStorage.getItem('qareeb_country_v12')}catch(e){}
+  if(sc&&EMERGENCY_DB[sc])currentCountry=sc;
+  if(sl&&T[sl]){currentLang=sl}
+  else{
+    const bl=(navigator.language||navigator.userLanguage||'en').toLowerCase();
+    const p=bl.split('-'),lang=p[0],country=p[1]?p[1].toUpperCase():null;
+    if(!currentCountry&&country&&EMERGENCY_DB[country])currentCountry=country;
+    currentLang=T[lang]?lang:'en';
+  }
+  if(!currentCountry)setTimeout(showCountryPicker,800);
+}
+function showCountryPicker(){
+  document.getElementById('countryPicker').classList.add('show');
+  document.getElementById('pickerTitle').textContent=t('pickTitle');
+  document.getElementById('pickerText').textContent=t('pickText');
+  const g=document.getElementById('countryGrid');g.innerHTML='';
+  const pr=['TN','DZ','MA','EG','SA','AE','FR','US','GB','DE','ES','IT','TR','BE','NL','CA'];
+  const all=Object.keys(EMERGENCY_DB);
+  const sorted=pr.filter(c=>EMERGENCY_DB[c]).concat(all.filter(c=>!pr.includes(c)));
+  sorted.forEach(code=>{
+    const c=EMERGENCY_DB[code];
+    const it=document.createElement('div');it.className='country-item';
+    it.innerHTML=`<span class="flag">${c.flag}</span><div class="name">${c.name[currentLang]||c.name.en}</div><div class="code">${code}</div>`;
+    it.addEventListener('click',()=>selectCountry(code));
+    g.appendChild(it);
+  });
+}
+function selectCountry(code){
+  currentCountry=code;try{localStorage.setItem('qareeb_country_v12',code)}catch(e){}
+  document.getElementById('countryPicker').classList.remove('show');
+  renderEmergency();updateCountryDisplay();
+}
+function updateCountryDisplay(){
+  const el=document.getElementById('countryDisplay');
+  if(!currentCountry||!EMERGENCY_DB[currentCountry]){el.textContent='🌍 —';return}
+  const c=EMERGENCY_DB[currentCountry];
+  el.textContent=c.flag+' '+(c.name[currentLang]||c.name.en);
+  const tag=document.getElementById('emergCountry');
+  if(tag)tag.textContent=c.flag+' '+currentCountry;
+}
+function renderEmergency(){
+  const g=document.getElementById('emergGrid');if(!g)return;
+  const code=currentCountry||'TN';
+  const c=EMERGENCY_DB[code]||EMERGENCY_DB['TN'];
+  document.getElementById('emergTitle').textContent=t('emergTitle');
+  const items=[
+    {ico:'🚑',lbl:t('amb'),num:c.amb},
+    {ico:'🚓',lbl:t('pol'),num:c.pol},
+    {ico:'🚒',lbl:t('fire'),num:c.fire}
+  ];
+  g.innerHTML='';
+  items.forEach(it=>{
+    const a=document.createElement('a');a.href='tel:'+it.num;a.className='emerg-btn';
+    a.innerHTML=`<div class="ico">${it.ico}</div><div class="lbl">${it.lbl}</div><div class="num">${it.num}</div>`;
+    g.appendChild(a);
+  });
+  document.getElementById('lostText').textContent=t('lost');
+  updateCountryDisplay();
+}
+
+/* ============ LOST ============ */
+async function imLost(){
+  if(!userLocation){showToast(t('locating'));await requestLocation()}
+  if(!userLocation){showToast(t('noLoc'));return}
+  const link='https://www.google.com/maps?q='+userLocation.lat+','+userLocation.lng;
+  const msg=t('lostMsg')+'\n'+link;
+  pendingLostLink='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('lostPreviewText').innerHTML=t('lostMsg')+'<br><span class="lnk">'+link+'</span>';
+  document.getElementById('lostModalTitle').textContent=t('lostTitle');
+  document.getElementById('lostModalSubtitle').textContent=t('lostSub');
+  document.getElementById('lostPreviewLabel').textContent=t('lostPrevLabel');
+  document.getElementById('lostCancelText').textContent=t('cancel');
+  document.getElementById('lostConfirmText').textContent=t('confirm');
+  document.getElementById('lostOverlay').classList.add('show');
+}
+function closeLostModal(){document.getElementById('lostOverlay').classList.remove('show');pendingLostLink=null}
+function confirmLost(){
+  if(!pendingLostLink){closeLostModal();return}
+  openURL(pendingLostLink);
+  closeLostModal();
+  showToast(t('lostSent'));
+}
+document.addEventListener('click',e=>{const m=document.getElementById('lostOverlay');if(m&&e.target===m)closeLostModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLostModal();closeViewsSheet()}});
+
+/* ============ LANGUAGE ============ */
+function applyLanguage(lang){
+  if(!T[lang])lang='en';
+  currentLang=lang;
+  document.documentElement.lang=lang;
+  document.documentElement.dir=(lang==='ar')?'rtl':'ltr';
+  document.getElementById('appName').textContent=t('appName');
+  document.getElementById('heroTitle').innerHTML=t('heroTitle');
+  document.getElementById('heroSubtitle').textContent=t('heroSub');
+  document.getElementById('locText').textContent=userLocation?t('locReady'):t('locating');
+  document.getElementById('recentTitle').textContent=t('recent');
+  document.getElementById('recentClear').textContent=t('clear');
+  document.getElementById('sectorsTitle').textContent=t('sectorsTitle');
+  document.getElementById('footer').textContent=t('footer');
+  document.getElementById('mainSearch').placeholder=t('searchPh');
+  document.getElementById('sectorSearch').placeholder=t('searchPh');
+  document.getElementById('registerTitle').textContent=t('regTitle');
+  document.getElementById('registerSubtitle').textContent=t('regSub');
+  document.getElementById('bizNameLabel').textContent=t('bName');
+  document.getElementById('bizTypeLabel').textContent=t('bType');
+  document.getElementById('bizAddressLabel').textContent=t('bAddr');
+  document.getElementById('bizPhoneLabel').textContent=t('bPhone');
+  document.getElementById('submitBtn').textContent=t('submit');
+  document.getElementById('successTitle').textContent=t('okTitle');
+  document.getElementById('successText').textContent=t('okText');
+  document.getElementById('openGoogleLink').textContent=t('openG');
+  document.getElementById('easierWayTitle').textContent=t('easier');
+  document.getElementById('easierWayText').innerHTML=t('easierText');
+  document.getElementById('navHome').textContent=t('navHome');
+  document.getElementById('navSearch').textContent=t('navSearch');
+  document.getElementById('navAdd').textContent=t('navAdd');
+  document.getElementById('aiTitle').textContent=t('aiTitle');
+  document.getElementById('aiStatus').textContent=t('aiStatus');
+  document.getElementById('aiInput').placeholder=t('aiPh');
+  document.getElementById('placesMapBtn').textContent=t('viewMap');
+  renderEmergency();renderSectors();renderRecent();renderFavs();renderAISuggestions();
+  if(currentSectorId){
+    const s=sectors.find(x=>x.id===currentSectorId);
+    if(s){
+      document.getElementById('sectorName').textContent=s[currentLang]||s.en;
+      document.getElementById('sectorSubtitle').textContent=t('sectorSub');
+    }
+    renderSectorActivities(document.getElementById('sectorSearch').value);
+  }
+  fillBizTypes();hideSug();
+  try{localStorage.setItem('qareeb_lang_v12',lang)}catch(e){}
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-lang')===lang));
+}
+document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',()=>applyLanguage(b.getAttribute('data-lang'))));
+
+/* ============ STATS + RECENT ============ */
+const STATS_KEY='qareeb_usage_v12',RECENT_KEY='qareeb_recent_v12';
+function loadStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY))||{}}catch(e){return{}}}
+function incUsage(n){const s=loadStats();s[n]=(s[n]||0)+1;try{localStorage.setItem(STATS_KEY,JSON.stringify(s))}catch(e){}}
+function loadRecent(){try{return JSON.parse(localStorage.getItem(RECENT_KEY))||[]}catch(e){return[]}}
+function saveRecent(a){try{localStorage.setItem(RECENT_KEY,JSON.stringify(a))}catch(e){}}
+function addRecent(n){let a=loadRecent();a=a.filter(x=>x!==n);a.unshift(n);a=a.slice(0,6);saveRecent(a);renderRecent()}
+function clearRecents(){saveRecent([]);renderRecent();showToast(t('cleared'))}
+function renderRecent(){
+  const a=loadRecent(),sec=document.getElementById('recentSection'),chips=document.getElementById('recentChips');
+  if(!sec)return;
+  if(a.length===0){sec.classList.remove('show');return}
+  sec.classList.add('show');chips.innerHTML='';
+  a.forEach(n=>{
+    const act=activities.find(x=>x.ar===n||x.en===n);if(!act)return;
+    const c=document.createElement('button');c.className='recent-chip';
+    c.innerHTML=act.i+' '+(act[currentLang]||act.en);
+    c.addEventListener('click',()=>openNearbyPlaces(act));chips.appendChild(c);
+  });
+}
+
+/* ============ STATE ============ */
+const toast=document.getElementById('toast');
+function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>toast.classList.remove('show'),2200)}
+
+/* ============ GEOAPIFY — عرض الأماكن ============ */
+async function openNearbyPlaces(act){
+  currentPlacesActivity = act;
+  incUsage(act.ar);
+  addRecent(act.ar);
+  hideSug();
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+
+  document.getElementById('placesIcon').textContent = act.i;
+  document.getElementById('placesTitle').textContent = act[currentLang] || act.en;
+  document.getElementById('placesMapBtn').textContent = t('viewMap');
+  document.getElementById('placesSub').textContent = t('loading');
+
+  const list = document.getElementById('placesList');
+  list.innerHTML = '<div class="places-loading"><div class="spinner-lg"></div>'+t('loading')+'</div>';
+
+  switchPage('places');
+  window.scrollTo(0,0);
+
+  if(!userLocation){ await requestLocation(); }
+
+  if(!userLocation){
+    list.innerHTML = '<div class="places-empty"><span class="ico">📍</span>'+t('locErr')+'<br><button onclick="retryPlaces()">'+t('retry')+'</button></div>';
+    return;
+  }
+
+  const category = GEO_CATEGORIES[act.q] || 'commercial';
+  const url = 'https://api.geoapify.com/v2/places'+
+    '?categories='+category+
+    '&filter=circle:'+userLocation.lng+','+userLocation.lat+',5000'+
+    '&bias=proximity:'+userLocation.lng+','+userLocation.lat+
+    '&limit=25'+
+    '&lang='+currentLang+
+    '&apiKey='+GEOAPIFY_KEY;
+
+  try{
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    currentPlacesData = data.features || [];
+    renderPlacesList(currentPlacesData);
+  }catch(err){
+    console.error('Geoapify error:',err);
+    list.innerHTML = '<div class="places-empty"><span class="ico">⚠️</span>'+t('placesError')+'<br><button onclick="retryPlaces()">'+t('retry')+'</button></div>';
+  }
+}
+function retryPlaces(){
+  if(currentPlacesActivity) openNearbyPlaces(currentPlacesActivity);
+}
+function renderPlacesList(places){
+  const list = document.getElementById('placesList');
+  document.getElementById('placesSub').textContent = places.length+' '+t('placesFound');
+  if(places.length === 0){
+    list.innerHTML = '<div class="places-empty"><span class="ico">🔍</span>'+t('placesEmpty')+'</div>';
+    return;
+  }
+  list.innerHTML = '';
+  places.forEach(place => { list.appendChild(createPlaceCard(place)); });
+}
+function createPlaceCard(place){
+  const p = place.properties || {};
+  const geo = place.geometry || {};
+  const coords = geo.coordinates || [0,0];
+
+  const card = document.createElement('div');
+  card.className = 'place-card';
+
+  const icon = (currentPlacesActivity && currentPlacesActivity.i) || '📍';
+  const name = p.name || p.address_line1 || (currentPlacesActivity && currentPlacesActivity[currentLang]) || '—';
+  const address = [p.address_line1, p.address_line2].filter(Boolean).join(', ') || p.city || '';
+  const distance = p.distance != null ? formatDistance(p.distance) : '';
+  const phone = (p.contact && p.contact.phone) || '';
+  const openNow = isOpenNow(p.opening_hours);
+
+  const lat = coords[1] || 0, lng = coords[0] || 0;
+  const directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng;
+
+  let statusHtml = '';
+  if(openNow === true){
+    statusHtml = '<div class="place-status open"><span class="sdot"></span>'+t('openNow')+'</div>';
+  } else if(openNow === false){
+    statusHtml = '<div class="place-status closed"><span class="sdot"></span>'+t('closedNow')+'</div>';
+  }
+
+  card.innerHTML =
+    '<div class="place-img">'+icon+'</div>'+
+    '<div class="place-body">'+
+      '<div class="place-name">'+escapeHTML(name)+'</div>'+
+      (distance ? '<div class="place-distance">📍 '+distance+'</div>' : '')+
+      (address ? '<div class="place-address">'+escapeHTML(address)+'</div>' : '')+
+      '<div class="place-meta">'+statusHtml+'</div>'+
+      '<div class="place-actions">'+
+        '<button class="btn-dir" data-action="dir">🗺️ '+t('directions')+'</button>'+
+        (phone ? '<button class="btn-call" data-action="call">📞 '+t('call')+'</button>' : '')+
+      '</div>'+
+    '</div>';
+
+  card.addEventListener('click', function(e){
+    if(e.target.closest('[data-action]')) return;
+    openViewsSheet({
+      i: icon,
+      q: name,
+      s: currentPlacesActivity ? currentPlacesActivity.s : 'general',
+      ar: name, fr: name, en: name
+    });
+  });
+
+  card.querySelector('[data-action="dir"]').addEventListener('click', function(e){
+    e.stopPropagation();
+    openURL(directionsUrl);
+  });
+
+  const callBtn = card.querySelector('[data-action="call"]');
+  if(callBtn){
+    callBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      openURL('tel:'+phone.replace(/\s/g,''));
+    });
+  }
+
+  return card;
+}
+function formatDistance(meters){
+  if(meters < 1000) return Math.round(meters)+' m';
+  return (meters/1000).toFixed(1)+' km';
+}
+function isOpenNow(openingHours){
+  if(!openingHours) return null;
+  try{
+    const now = new Date();
+    const day = now.getDay();
+    const hour = now.getHours();
+    const min = now.getMinutes();
+    const current = hour*60 + min;
+    const dayMap = {0:'Su',1:'Mo',2:'Tu',3:'We',4:'Th',5:'Fr',6:'Sa'};
+    const today = dayMap[day];
+
+    const segments = openingHours.split(';');
+    for(const seg of segments){
+      const trimmed = seg.trim();
+      if(!trimmed) continue;
+      const parts = trimmed.split(' ');
+      if(parts.length < 2) continue;
+      const daysPart = parts[0];
+      const hoursPart = parts[1];
+
+      let matchDay = false;
+      if(daysPart.includes('-')){
+        const [start, end] = daysPart.split('-');
+        const dayOrder = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+        const sIdx = dayOrder.indexOf(start);
+        const eIdx = dayOrder.indexOf(end);
+        const tIdx = dayOrder.indexOf(today);
+        if(sIdx >= 0 && eIdx >= 0 && tIdx >= 0){
+          if(sIdx <= eIdx){ matchDay = tIdx >= sIdx && tIdx <= eIdx; }
+          else { matchDay = tIdx >= sIdx || tIdx <= eIdx; }
+        }
+      } else if(daysPart.includes(',')){
+        matchDay = daysPart.split(',').includes(today);
+      } else {
+        matchDay = daysPart === today;
+      }
+
+      if(!matchDay) continue;
+
+      if(hoursPart === '24/7' || hoursPart === '00:00-24:00') return true;
+      const ranges = hoursPart.split(',');
+      for(const range of ranges){
+        const [start, end] = range.split('-');
+        if(!start || !end) continue;
+        const [sh, sm] = start.split(':').map(Number);
+        const [eh, em] = end.split(':').map(Number);
+        const startMin = sh*60 + (sm||0);
+        const endMin = eh*60 + (em||0);
+        if(endMin < startMin){
+          if(current >= startMin || current <= endMin) return true;
+        } else {
+          if(current >= startMin && current <= endMin) return true;
+        }
+      }
+      return false;
+    }
+    return null;
+  }catch(e){ return null; }
+}
+function backToSector(){
+  if(currentSectorId){ switchPage('sector'); }
+  else { switchPage('home'); }
+}
+function openAllOnMap(){
+  if(!currentPlacesActivity) return;
+  openURL(buildURL(currentPlacesActivity.q,'map'));
+}
+
+function openActivity(act){
+  openNearbyPlaces(act);
+}
+
+/* ============ SEARCH ============ */
+const mainSearch=document.getElementById('mainSearch');
+const mainClear=document.getElementById('mainSearchClear');
+const sugBox=document.getElementById('suggestions');
+
+function highlight(text,term){
+  if(!term)return text;
+  const i=text.toLowerCase().indexOf(term.toLowerCase());
+  if(i===-1)return text;
+  return text.slice(0,i)+'<b>'+text.slice(i,i+term.length)+'</b>'+text.slice(i+term.length);
+}
+function showSug(term){
+  const clean=term.trim();if(clean===''){hideSug();return}
+  const low=clean.toLowerCase();
+  const matches=activities.filter(a=>
+    (a[currentLang]||'').toLowerCase().includes(low)||a.en.toLowerCase().includes(low)||
+    a.fr.toLowerCase().includes(low)||a.ar.includes(clean)||a.q.toLowerCase().includes(low)
+  ).slice(0,15);
+  if(matches.length===0){
+    sugBox.innerHTML='<div class="sug-empty"><span class="ico">🔍</span>'+t('noSug')+' "<b>'+clean+'</b>"<br><small style="font-size:11.5px;opacity:.7">'+t('tryOther')+'</small></div>';
+    sugBox.classList.add('show');return;
+  }
+  sugBox.innerHTML='';
+  matches.forEach(a=>{
+    const s=sectors.find(x=>x.id===a.s);
+    const it=document.createElement('div');it.className='sug-item';
+    it.innerHTML=`<div class="sug-ico">${a.i}</div><div class="sug-body"><div class="sug-title">${highlight(a[currentLang]||a.en,clean)}</div><div class="sug-sub">${s?s.icon+' '+(s[currentLang]||s.en):''}</div></div><div class="sug-arrow">↗</div>`;
+    it.addEventListener('click',()=>openActivity(a));sugBox.appendChild(it);
+  });
+  sugBox.classList.add('show');
+}
+function hideSug(){sugBox.classList.remove('show');sugBox.innerHTML=''}
+
+mainSearch.addEventListener('input',e=>{mainClear.classList.toggle('show',e.target.value.length>0);showSug(e.target.value)});
+mainSearch.addEventListener('focus',()=>{if(mainSearch.value.trim()!=='')showSug(mainSearch.value)});
+mainClear.addEventListener('click',()=>{mainSearch.value='';mainClear.classList.remove('show');hideSug();mainSearch.focus()});
+document.addEventListener('click',e=>{const w=document.querySelector('.search-section');if(w&&!w.contains(e.target))hideSug()});
+function focusSearch(){
+  switchPage('home');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn')[1].classList.add('active');
+  setTimeout(()=>{mainSearch.focus();window.scrollTo(0,0)},100);
+}
+
+/* ============ SECTORS ============ */
+function renderSectors(){
+  const c=document.getElementById('sectorsGrid');c.innerHTML='';
+  document.getElementById('sectorsCount').textContent=activities.length+' '+t('activities');
+  sectors.forEach(s=>{
+    const n=activities.filter(a=>a.s===s.id).length;if(n===0)return;
+    const card=document.createElement('div');card.className='sector-card';
+    card.innerHTML=`<div class="sector-ico">${s.icon}</div><div class="sector-body"><div class="sector-title">${s[currentLang]||s.en}</div><div class="sector-count">${n} ${t('activities')}</div></div>`;
+    card.addEventListener('click',()=>openSector(s.id));c.appendChild(card);
+  });
+}
+function openSector(id){
+  currentSectorId=id;const s=sectors.find(x=>x.id===id);if(!s)return;
+  document.getElementById('sectorIcon').textContent=s.icon;
+  document.getElementById('sectorName').textContent=s[currentLang]||s.en;
+  document.getElementById('sectorSubtitle').textContent=t('sectorSub');
+  document.getElementById('sectorSearch').value='';document.getElementById('sectorClear').classList.remove('show');
+  renderSectorActivities('');switchPage('sector');window.scrollTo(0,0);
+}
+function renderSectorActivities(term){
+  const g=document.getElementById('sectorGrid');g.innerHTML='';
+  const q=(term||'').trim().toLowerCase();
+  const list=activities.filter(a=>{
+    if(a.s!==currentSectorId)return false;
+    if(q==='')return true;
+    return (a[currentLang]||'').toLowerCase().includes(q)||a.ar.includes(q)||a.en.toLowerCase().includes(q)||a.q.toLowerCase().includes(q);
+  });
+  if(list.length===0){g.innerHTML='<div class="no-results"><span class="ico">🔍</span>'+t('noResults')+'</div>';return}
+  list.forEach(a=>{
+    const card=document.createElement('div');card.className='act-card';
+    const fav=isFav(a);
+    card.innerHTML=`<button class="act-star${fav?' on':''}" onclick="event.stopPropagation();toggleFav({q:'${a.q}',s:'${a.s}',i:'${a.i}',ar:'${a.ar}',fr:'${a.fr}',en:'${a.en}'})">${fav?'⭐':'☆'}</button><div class="act-ico">${a.i}</div><div class="act-title">${a[currentLang]||a.en}</div>`;
+    card.addEventListener('click',()=>openActivity(a));
+    g.appendChild(card);
+  });
+}
+function switchPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active')}
+function switchTab(page,btn){switchPage(page);document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');window.scrollTo(0,0)}
+function backToHome(){switchPage('home');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.nav-btn')[0].classList.add('active');window.scrollTo(0,0)}
+document.getElementById('sectorSearch').addEventListener('input',e=>{document.getElementById('sectorClear').classList.toggle('show',e.target.value.length>0);renderSectorActivities(e.target.value)});
+function clearSectorSearch(){document.getElementById('sectorSearch').value='';document.getElementById('sectorClear').classList.remove('show');renderSectorActivities('')}
+function fillBizTypes(){
+  const sel=document.getElementById('bizType');sel.innerHTML='<option value="">--</option>';
+  sectors.forEach(s=>{
+    const acts=activities.filter(a=>a.s===s.id);if(!acts.length)return;
+    const grp=document.createElement('optgroup');grp.label=s.icon+' '+(s[currentLang]||s.en);
+    acts.forEach(a=>{const o=document.createElement('option');o.value=a.q;o.textContent=a.i+' '+(a[currentLang]||a.en);grp.appendChild(o)});
+    sel.appendChild(grp);
+  });
+}
+function submitBusiness(){
+  const n=document.getElementById('bizName').value.trim();
+  if(!n){showToast(t('nameReq'));document.getElementById('bizName').focus();return}
+  document.getElementById('successBox').classList.add('show');showToast('✅');
+  setTimeout(()=>document.getElementById('successBox').scrollIntoView({behavior:'smooth',block:'center'}),300);
+}
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ AI CHAT ============ */
+let aiHistory=[];
+let aiBusy=false;
+
+function openAIChat(){
+  document.getElementById('aiChat').classList.add('show');
+  document.body.style.overflow='hidden';
+  const msgs=document.getElementById('aiMessages');
+  if(msgs.children.length===0){addAIMessage('ai',t('aiWelcome'))}
+  setTimeout(()=>document.getElementById('aiInput').focus(),300);
+}
+function closeAIChat(){
+  document.getElementById('aiChat').classList.remove('show');
+  document.body.style.overflow='';
+}
+function renderAISuggestions(){
+  const cont=document.getElementById('aiSuggestions');cont.innerHTML='';
+  const arr=AI_SUG[currentLang]||AI_SUG.en;
+  arr.forEach(s=>{
+    const c=document.createElement('button');c.className='ai-sug-chip';c.textContent=s;
+    c.addEventListener('click',()=>{document.getElementById('aiInput').value=s;sendAIMessage()});
+    cont.appendChild(c);
+  });
+}
+function addAIMessage(role,text){
+  const msgs=document.getElementById('aiMessages');
+  const div=document.createElement('div');div.className='ai-msg '+role;
+  const avatar=role==='user'?'👤':'🤖';
+  div.innerHTML=`<div class="ai-msg-avatar">${avatar}</div><div class="ai-bubble">${escapeHTML(text)}</div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+function addAIMessageWithMap(role,text,searchQuery){
+  const msgs=document.getElementById('aiMessages');
+  const div=document.createElement('div');div.className='ai-msg '+role;
+  const avatar=role==='user'?'👤':'🤖';
+  const bubble=document.createElement('div');bubble.className='ai-bubble';
+  bubble.innerHTML=escapeHTML(text);
+  if(searchQuery){
+    const btn=document.createElement('button');btn.className='ai-map-btn';
+    btn.innerHTML=t('aiOpenMap')+' ('+searchQuery+')';
+    btn.addEventListener('click',function(){openURL(buildURL(searchQuery,'map'))});
+    bubble.appendChild(document.createElement('br'));
+    bubble.appendChild(btn);
+  }
+  div.innerHTML=`<div class="ai-msg-avatar">${avatar}</div>`;
+  div.appendChild(bubble);
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function showTyping(){
+  const msgs=document.getElementById('aiMessages');
+  const div=document.createElement('div');div.className='ai-typing';div.id='aiTyping';
+  div.innerHTML=`<div class="ai-msg-avatar">🤖</div><div class="bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+function hideTyping(){const el=document.getElementById('aiTyping');if(el)el.remove()}
+
+async function sendAIMessage(){
+  if(aiBusy)return;
+  const input=document.getElementById('aiInput');
+  const text=input.value.trim();if(!text)return;
+  if(!GROQ_API_KEY||GROQ_API_KEY.length<10){addAIMessage('ai',t('aiNoKey'));return}
+  addAIMessage('user',text);
+  input.value='';input.style.height='auto';
+  aiBusy=true;document.getElementById('aiSend').disabled=true;showTyping();
+  try{
+    const messages=[
+      {role:'system',content:AI_SYS[currentLang]||AI_SYS.en},
+      ...aiHistory.slice(-8),
+      {role:'user',content:text}
+    ];
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_API_KEY},
+      body:JSON.stringify({model:GROQ_MODEL,messages:messages,temperature:0.6,max_tokens:250})
+    });
+    if(!res.ok){
+      const errText=await res.text();
+      let errMsg='HTTP '+res.status;
+      try{const errJson=JSON.parse(errText);errMsg=errJson.error?.message||errMsg}catch(e){}
+      throw new Error(errMsg);
+    }
+    const data=await res.json();
+    let aiText=data.choices?.[0]?.message?.content||'';
+    aiText=aiText.trim();if(!aiText)aiText='...';
+    const match=aiText.match(/\[SEARCH:\s*([^\]]+)\]/i);
+    let searchQuery=null,cleanText=aiText;
+    if(match){searchQuery=match[1].trim();cleanText=aiText.replace(/\[SEARCH:[^\]]+\]/gi,'').trim()}
+    hideTyping();
+    addAIMessageWithMap('ai',cleanText,searchQuery);
+    aiHistory.push({role:'user',content:text});
+    aiHistory.push({role:'assistant',content:aiText});
+    if(aiHistory.length>16)aiHistory=aiHistory.slice(-16);
+  }catch(err){
+    hideTyping();console.error('AI error:',err);
+    let msg='⚠️ '+(err&&err.message?err.message:'Unknown error');
+    addAIMessage('ai',msg);
+  }finally{
+    aiBusy=false;
+    document.getElementById('aiSend').disabled=false;
+    setTimeout(()=>input.focus(),100);
+  }
+}
+
+const aiInput=document.getElementById('aiInput');
+aiInput.addEventListener('input',function(){
+  this.style.height='auto';
+  this.style.height=Math.min(this.scrollHeight,120)+'px';
+});
+aiInput.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMessage()}
+});
+
+/* ============ INIT ============ */
+(function(){
+  detect();applyLanguage(currentLang);
+  requestLocation().then(()=>{setTimeout(checkNearbyAlerts,1500)});
+  console.log('✅ Qareeb v12 ready — Geoapify integrated');
+})();
+</script>
+</body>
+</html>
